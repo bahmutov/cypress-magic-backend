@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npm install --prefix app",
     "test": "cypress run",
     "start": "npm start --prefix app",
     "start:static": "npm run start:static --prefix app",
