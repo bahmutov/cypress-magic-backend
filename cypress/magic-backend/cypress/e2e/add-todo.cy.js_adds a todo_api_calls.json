@@ -1,0 +1,36 @@
+[
+  {
+    "method": "GET",
+    "url": "http://localhost:3000/todos",
+    "request": "",
+    "response": []
+  },
+  {
+    "method": "POST",
+    "url": "http://localhost:3000/todos",
+    "request": {
+      "title": "item 1",
+      "completed": false,
+      "id": "6951729502"
+    },
+    "response": {
+      "title": "item 1",
+      "completed": false,
+      "id": "6951729502"
+    }
+  },
+  {
+    "method": "POST",
+    "url": "http://localhost:3000/todos",
+    "request": {
+      "title": "item 2",
+      "completed": false,
+      "id": "3296758351"
+    },
+    "response": {
+      "title": "item 2",
+      "completed": false,
+      "id": "3296758351"
+    }
+  }
+]

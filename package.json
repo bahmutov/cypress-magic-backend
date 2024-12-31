@@ -1,5 +1,5 @@
 {
-  "name": "cypress-magick-backend",
+  "name": "cypress-magic-backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,8 @@
     "cy:open": "cypress open"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
+  "license": "private",
   "description": "",
   "devDependencies": {
     "cypress": "13.17.0",
