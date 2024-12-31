@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 beforeEach(() => {
-  const mode = Cypress.env('cypress-magic-backend.mode')
+  const mode = Cypress.env('magic_backend_mode')
   if (mode !== 'playback') {
     cy.request('POST', '/reset', { todos: [] })
   }

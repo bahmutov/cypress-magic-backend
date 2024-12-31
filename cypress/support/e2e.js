@@ -2,15 +2,15 @@
 // @ts-check
 
 const label = 'cypress-magic-backend'
-// Cypress.env('cypress-magic-backend.mode', 'recording')
-// Cypress.env('cypress-magic-backend.mode', 'playback')
+// Cypress.env('magic_backend_mode', 'recording')
+// Cypress.env('magic_backend_mode', 'playback')
 
 const apiCallsInThisTest = []
 
 beforeEach(() => {
   apiCallsInThisTest.length = 0
 
-  const mode = Cypress.env('cypress-magic-backend.mode')
+  const mode = Cypress.env('magic_backend_mode')
   switch (mode) {
     case 'recording':
       cy.log(`**${label}** Recording mode`)
@@ -81,7 +81,7 @@ function formTestRecordingFilename(currentSpec, currentTest) {
 }
 
 afterEach(() => {
-  const mode = Cypress.env('cypress-magic-backend.mode')
+  const mode = Cypress.env('magic_backend_mode')
   switch (mode) {
     case 'recording':
       const specName = Cypress.spec.relative

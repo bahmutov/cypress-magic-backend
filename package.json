@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cypress run",
     "start": "npm start --prefix app",
+    "start:static": "npm run start:static --prefix app",
     "dev": "start-test start http://localhost:3000 cy:open",
-    "cy:open": "cypress open"
+    "cy:open": "cypress open",
+    "test:no-backend": "CYPRESS_magic_backend_mode=playback start-test start:static http://localhost:3000"
   },
   "keywords": [],
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
