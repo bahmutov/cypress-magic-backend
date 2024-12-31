@@ -11,12 +11,12 @@
     "request": {
       "title": "item 1",
       "completed": false,
-      "id": "6951729502"
+      "id": "7360179188"
     },
     "response": {
       "title": "item 1",
       "completed": false,
-      "id": "6951729502"
+      "id": "7360179188"
     }
   },
   {
@@ -25,12 +25,29 @@
     "request": {
       "title": "item 2",
       "completed": false,
-      "id": "3296758351"
+      "id": "5202644843"
     },
     "response": {
       "title": "item 2",
       "completed": false,
-      "id": "3296758351"
+      "id": "5202644843"
     }
+  },
+  {
+    "method": "GET",
+    "url": "http://localhost:3000/todos",
+    "request": "",
+    "response": [
+      {
+        "title": "item 1",
+        "completed": false,
+        "id": "7360179188"
+      },
+      {
+        "title": "item 2",
+        "completed": false,
+        "id": "5202644843"
+      }
+    ]
   }
 ]
