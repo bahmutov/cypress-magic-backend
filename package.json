@@ -1,0 +1,20 @@
+{
+  "name": "cypress-magick-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm start --prefix app",
+    "dev": "start-test start http://localhost:3000 cy:open",
+    "cy:open": "cypress open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "cypress": "13.17.0",
+    "prettier": "3.4.2",
+    "start-server-and-test": "2.0.9"
+  }
+}
