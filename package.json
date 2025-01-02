@@ -9,6 +9,8 @@
     "start:static": "npm run start:static --prefix app",
     "dev": "start-test start http://localhost:3000 cy:open",
     "cy:open": "cypress open",
+    "record": "CYPRESS_magic_backend_mode=record start-test http://localhost:3000",
+    "play": "CYPRESS_magic_backend_mode=playback start-test http://localhost:3000",
     "test:no-backend": "CYPRESS_magic_backend_mode=playback start-test start:static http://localhost:3000"
   },
   "keywords": [],
