@@ -7,18 +7,18 @@
       {
         "title": "item 1",
         "completed": false,
-        "id": "4323419046"
+        "id": "0276232434"
       },
       {
         "title": "item 2",
         "completed": false,
-        "id": "6423435213"
+        "id": "5127680260"
       }
     ]
   },
   {
     "method": "DELETE",
-    "url": "http://localhost:3000/todos/6423435213",
+    "url": "http://localhost:3000/todos/5127680260",
     "request": "",
     "response": {}
   }

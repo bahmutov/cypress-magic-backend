@@ -108,7 +108,7 @@ beforeEach(() => {
             response: res.body,
           })
         })
-      })
+      }).as('🎥 🪄')
       break
     case 'play':
     case 'playback':
@@ -118,30 +118,32 @@ beforeEach(() => {
         Cypress.currentTest,
       )
       // for now assuming the file exists
-      cy.readFile(filename).then((apiCalls) => {
-        let apiCallIndex = 0
-        cy.intercept(apiCallsToIntercept, (req) => {
-          const apiCall = apiCalls[apiCallIndex]
-          if (!apiCall) {
-            throw new Error(
-              `Ran out of recorded API calls at index ${apiCallIndex}`,
-            )
-          }
-          apiCallIndex += 1
-          if (req.method !== apiCall.method) {
-            throw new Error(
-              `Expected method ${apiCall.method} but got ${req.method}`,
-            )
-          }
-          if (req.url !== apiCall.url) {
-            throw new Error(
-              `Expected URL ${apiCall.url} but got ${req.url}`,
-            )
-          }
-          // todo: check the request body
-          req.reply(apiCall.response)
+      cy.readFile(filename)
+        .then((apiCalls) => {
+          let apiCallIndex = 0
+          cy.intercept(apiCallsToIntercept, (req) => {
+            const apiCall = apiCalls[apiCallIndex]
+            if (!apiCall) {
+              throw new Error(
+                `Ran out of recorded API calls at index ${apiCallIndex}`,
+              )
+            }
+            apiCallIndex += 1
+            if (req.method !== apiCall.method) {
+              throw new Error(
+                `Expected method ${apiCall.method} but got ${req.method}`,
+              )
+            }
+            if (req.url !== apiCall.url) {
+              throw new Error(
+                `Expected URL ${apiCall.url} but got ${req.url}`,
+              )
+            }
+            // todo: check the request body
+            req.reply(apiCall.response)
+          })
         })
-      })
+        .as('🎞️ 🪄')
       break
   }
 })
