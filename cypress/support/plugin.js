@@ -33,6 +33,7 @@ const apiCallsInThisTest = []
 before(() => {
   const doc = window.top?.document
   let $recordButton = Cypress.$('#record-api-calls', doc)
+  let $replayButton = Cypress.$('#replay-api-calls', doc)
 
   const restartTests = () => {
     const $restartButton = Cypress.$('button.restart', doc)
@@ -44,32 +45,38 @@ before(() => {
 
   const onClickRecordButton = () => {
     console.log('running the tests and recording the API calls')
-    console.log('window.top', window.top)
     if (window.top) {
       window.top.magicBackendModeOverride = 'recording'
-      console.log('set the recording mode')
     }
     restartTests()
   }
 
-  if ($recordButton.length) {
-    $recordButton.on('click', onClickRecordButton)
-    return
+  const onClickReplayButton = () => {
+    console.log('replaying the API calls')
+    if (window.top) {
+      window.top.magicBackendModeOverride = 'playback'
+    }
+    restartTests()
   }
 
   const styles = 'border: 1px solid #2e3247; border-radius: 4px;'
-
-  $recordButton = Cypress.$(
-    `<span style="${styles}"><button aria-label="Record API calls" title="Record API calls" id="record-api-calls">🎥 Record</button></span>`,
-  )
-  $recordButton.on('click', onClickRecordButton)
-
-  const $replayButton = Cypress.$(
-    `<span style="${styles}"><button aria-label="Replay API calls" title="Replay API calls" id="replay-api-calls">🎞️ Replay API</button></span>`,
-  )
-
   const $controls = Cypress.$('.reporter header', doc)
-  $controls.append($recordButton).append($replayButton)
+
+  if (!$recordButton.length) {
+    $recordButton = Cypress.$(
+      `<span style="${styles}"><button aria-label="Record API calls" title="Record API calls" id="record-api-calls">🎥 Record</button></span>`,
+    )
+    $controls.append($recordButton)
+  }
+  if (!$replayButton.length) {
+    $replayButton = Cypress.$(
+      `<span style="${styles}"><button aria-label="Replay API calls" title="Replay API calls" id="replay-api-calls">🎞️ Replay API</button></span>`,
+    )
+    $controls.append($replayButton)
+  }
+
+  $recordButton.on('click', onClickRecordButton)
+  $replayButton.on('click', onClickReplayButton)
 })
 
 after(() => {
