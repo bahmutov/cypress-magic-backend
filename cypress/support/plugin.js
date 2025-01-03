@@ -25,6 +25,12 @@ function normalizeBackendMode() {
     case 'playback':
       Cypress.env('magic_backend_mode', 'playback')
       break
+    case 'inspect':
+    case 'inspecting':
+    case 'observe':
+    case 'observing':
+      Cypress.env('magic_backend_mode', 'inspect')
+      break
   }
 }
 
@@ -34,6 +40,7 @@ before(() => {
   const doc = window.top?.document
   let $recordButton = Cypress.$('#record-api-calls', doc)
   let $replayButton = Cypress.$('#replay-api-calls', doc)
+  let $inspectButton = Cypress.$('#inspect-api-calls', doc)
 
   const restartTests = () => {
     const $restartButton = Cypress.$('button.restart', doc)
@@ -59,6 +66,14 @@ before(() => {
     restartTests()
   }
 
+  const onClickInspectButton = () => {
+    console.log('inspecting the API calls')
+    if (window.top) {
+      window.top.magicBackendModeOverride = 'inspect'
+    }
+    restartTests()
+  }
+
   const styles = 'border: 1px solid #2e3247; border-radius: 4px;'
   const $controls = Cypress.$('.reporter header', doc)
 
@@ -74,9 +89,16 @@ before(() => {
     )
     $controls.append($replayButton)
   }
+  if (!$inspectButton.length) {
+    $inspectButton = Cypress.$(
+      `<span style="${styles}"><button aria-label="Inspect API calls" title="Inspect API calls" id="inspect-api-calls">🪄 🧐</button></span>`,
+    )
+    $controls.append($inspectButton)
+  }
 
   $recordButton.on('click', onClickRecordButton)
   $replayButton.on('click', onClickReplayButton)
+  $inspectButton.on('click', onClickInspectButton)
 })
 
 after(() => {
