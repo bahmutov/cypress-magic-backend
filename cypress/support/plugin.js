@@ -12,7 +12,10 @@ const label = 'cypress-magic-backend'
  * and simply normalize the mode to "recording" or "playback".
  */
 function normalizeBackendMode() {
-  const mode = Cypress.env('magic_backend_mode')
+  const mode =
+    Cypress.env('magic_backend_mode') ||
+    window?.top?.magicBackendModeOverride
+  console.log('**magic_backend_mode**', mode)
   switch (mode) {
     case 'record':
     case 'recording':
@@ -26,6 +29,52 @@ function normalizeBackendMode() {
 }
 
 const apiCallsInThisTest = []
+
+before(() => {
+  const doc = window.top?.document
+  let $recordButton = Cypress.$('#record-api-calls', doc)
+
+  const restartTests = () => {
+    const $restartButton = Cypress.$('button.restart', doc)
+    if (!$restartButton.length) {
+      throw new Error('Missing the test restart button')
+    }
+    $restartButton.trigger('click')
+  }
+
+  const onClickRecordButton = () => {
+    console.log('running the tests and recording the API calls')
+    console.log('window.top', window.top)
+    if (window.top) {
+      window.top.magicBackendModeOverride = 'recording'
+      console.log('set the recording mode')
+    }
+    restartTests()
+  }
+
+  if ($recordButton.length) {
+    $recordButton.on('click', onClickRecordButton)
+    return
+  }
+
+  const styles = 'border: 1px solid #2e3247; border-radius: 4px;'
+
+  $recordButton = Cypress.$(
+    `<span style="${styles}"><button aria-label="Record API calls" title="Record API calls" id="record-api-calls">🎥 Record</button></span>`,
+  )
+  $recordButton.on('click', onClickRecordButton)
+
+  const $replayButton = Cypress.$(
+    `<span style="${styles}"><button aria-label="Replay API calls" title="Replay API calls" id="replay-api-calls">🎞️ Replay API</button></span>`,
+  )
+
+  const $controls = Cypress.$('.reporter header', doc)
+  $controls.append($recordButton).append($replayButton)
+})
+
+after(() => {
+  window.top.magicBackendModeOverride = null
+})
 
 beforeEach(() => {
   normalizeBackendMode()
