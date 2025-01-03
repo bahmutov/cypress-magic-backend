@@ -64,13 +64,13 @@ before(() => {
 
   if (!$recordButton.length) {
     $recordButton = Cypress.$(
-      `<span style="${styles}"><button aria-label="Record API calls" title="Record API calls" id="record-api-calls">🎥 Record</button></span>`,
+      `<span style="${styles}"><button aria-label="Record API calls" title="Record API calls" id="record-api-calls">🪄 🎥</button></span>`,
     )
     $controls.append($recordButton)
   }
   if (!$replayButton.length) {
     $replayButton = Cypress.$(
-      `<span style="${styles}"><button aria-label="Replay API calls" title="Replay API calls" id="replay-api-calls">🎞️ Replay API</button></span>`,
+      `<span style="${styles}"><button aria-label="Replay API calls" title="Replay API calls" id="replay-api-calls">🪄 🎞️</button></span>`,
     )
     $controls.append($replayButton)
   }
@@ -108,7 +108,7 @@ beforeEach(() => {
             response: res.body,
           })
         })
-      }).as('🎥 🪄')
+      }).as('🪄 🎥')
       break
     case 'play':
     case 'playback':
@@ -143,7 +143,7 @@ beforeEach(() => {
             req.reply(apiCall.response)
           })
         })
-        .as('🎞️ 🪄')
+        .as('🪄 🎞️')
       break
   }
 })
