@@ -43,7 +43,13 @@ before(() => {
   let $inspectButton = Cypress.$('#inspect-api-calls', doc)
 
   const restartTests = () => {
-    const $restartButton = Cypress.$('button.restart', doc)
+    let $restartButton = Cypress.$('button.restart', doc)
+    if (!$restartButton.length) {
+      // the tests might be running already, stop them first
+      const $stopButton = Cypress.$('button.stop', doc)
+      $stopButton.trigger('click')
+      $restartButton = Cypress.$('button.restart', doc)
+    }
     if (!$restartButton.length) {
       throw new Error('Missing the test restart button')
     }
