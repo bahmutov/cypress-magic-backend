@@ -89,19 +89,19 @@ before(() => {
 
   if (!$recordButton.length) {
     $recordButton = Cypress.$(
-      `<span style="${styles}"><button aria-label="Record API calls" title="Record API calls" id="record-api-calls">🪄 🎥</button></span>`,
+      `<span style="${styles}"><button aria-label="Record API calls" title="${label} Record API calls" id="record-api-calls">🪄 🎥</button></span>`,
     )
     $controls.append($recordButton)
   }
   if (!$replayButton.length) {
     $replayButton = Cypress.$(
-      `<span style="${styles}"><button aria-label="Replay API calls" title="Replay API calls" id="replay-api-calls">🪄 🎞️</button></span>`,
+      `<span style="${styles}"><button aria-label="Replay API calls" title="${label} Replay API calls" id="replay-api-calls">🪄 🎞️</button></span>`,
     )
     $controls.append($replayButton)
   }
   if (!$inspectButton.length) {
     $inspectButton = Cypress.$(
-      `<span style="${styles}"><button aria-label="Inspect API calls" title="Inspect API calls" id="inspect-api-calls">🪄 🧐</button></span>`,
+      `<span style="${styles}"><button aria-label="Inspect API calls" title="${label} Inspect API calls" id="inspect-api-calls">🪄 🧐</button></span>`,
     )
     $controls.append($inspectButton)
   }
