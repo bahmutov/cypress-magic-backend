@@ -11,3 +11,9 @@ it('compares strings', () => {
     'string "foo" became undefined',
   )
 })
+
+it('compares numbers', () => {
+  expect(diff(42, 42)).to.be.undefined
+  expect(diff(42, 43)).to.be.undefined
+  expect(diff(42, 'hello')).to.equal('number 42 became string hello')
+})
