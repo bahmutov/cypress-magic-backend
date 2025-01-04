@@ -34,8 +34,8 @@ it('compares objects with keys', () => {
   expect(diff({}, { foo: 1, bar: 2 })).to.equal(
     'object added keys "foo, bar"',
   )
-  expect(diff({ foo: 'bar' }, {})).to.equal('object lost keys "foo"')
+  expect(diff({ foo: 'bar' }, {})).to.equal('object lost key "foo"')
   expect(diff({ foo: 'bar' }, { bar: 'baz' })).to.equal(
-    'object added keys "bar" and lost keys "foo"',
+    'object added key "bar" and lost key "foo"',
   )
 })

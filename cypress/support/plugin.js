@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 // @ts-check
 
+const { diff } = require('./diff')
+
 const label = 'cypress-magic-backend'
 const ModeNames = {
   RECORDING: 'recording',
@@ -234,13 +236,17 @@ beforeEach(() => {
               // }
               if (req.body === apiCall.request) {
               } else {
-                // todo: inspect the sent request
-                // and intelligently report differences
-                // in values vs types
-                console.log('app sending request')
-                console.log(req.body)
-                console.log('previously recorded request body')
-                console.log(apiCall.request)
+                const requestDiff = diff(apiCall.request, req.body)
+                if (requestDiff) {
+                  const baseUrl = Cypress.config('baseUrl')
+                  const partialUrl = baseUrl
+                    ? req.url.replace(baseUrl, '')
+                    : req.url
+                  console.warn(
+                    `${label} "${req.method} ${partialUrl}" ${requestDiff}`,
+                  )
+                  // todo: can we report the difference in the test runner?
+                }
               }
 
               req.continue((res) => {

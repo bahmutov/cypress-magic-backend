@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-framework="vue">
   <head>
     <meta charset="utf-8" />
     <meta name="author" content="Gleb Bahmutov" />
-    <meta name="description" content="Cypress basics workshop example app" />
+    <meta
+      name="description"
+      content="Cypress basics workshop example app"
+    />
     <title>Vue.js • TodoMVC</title>
     <link rel="stylesheet" href="vendor/index.css" />
     <!-- usually we can just let the browser load additional styles if the user's OS
@@ -61,9 +64,16 @@
             :class="{ completed: todo.completed }"
           >
             <div class="view">
-              <input class="toggle" type="checkbox" v-model="todo.completed" />
+              <input
+                class="toggle"
+                type="checkbox"
+                v-model="todo.completed"
+              />
               <label>{{ todo.title }}</label>
-              <button class="destroy" @click="removeTodo(todo)"></button>
+              <button
+                class="destroy"
+                @click="removeTodo(todo)"
+              ></button>
             </div>
           </li>
         </ul>
@@ -74,7 +84,10 @@
 
       <footer class="footer" v-show="todos.length">
         <span class="todo-count">
-          <strong v-text="remaining" data-cy="remaining-count"></strong>
+          <strong
+            v-text="remaining"
+            data-cy="remaining-count"
+          ></strong>
           {{pluralize('item', remaining)}} left
         </span>
         <ul class="filters">

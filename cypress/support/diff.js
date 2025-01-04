@@ -48,10 +48,12 @@ function diff(previous, current) {
       if (addedKeys.length || lostKeys.length) {
         const changes = []
         if (addedKeys.length) {
-          changes.push(`added keys "${addedKeys.join(', ')}"`)
+          const label = addedKeys.length === 1 ? 'key' : 'keys'
+          changes.push(`added ${label} "${addedKeys.join(', ')}"`)
         }
         if (lostKeys.length) {
-          changes.push(`lost keys "${lostKeys.join(', ')}"`)
+          const label = lostKeys.length === 1 ? 'key' : 'keys'
+          changes.push(`lost ${label} "${lostKeys.join(', ')}"`)
         }
         return `object ${changes.join(' and ')}`
       }
