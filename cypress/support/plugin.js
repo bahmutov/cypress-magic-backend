@@ -250,7 +250,21 @@ beforeEach(() => {
                   console.warn('current request body')
                   console.warn(req.body)
 
-                  // todo: can we report the difference in the test runner?
+                  // report the difference in the Command Log
+                  Cypress.log({
+                    name: '🔺',
+                    message: `${req.method} ${partialUrl} ${requestDiff}`,
+                    type: 'parent',
+                    consoleProps() {
+                      return {
+                        plugin: label,
+                        call: `${req.method} ${partialUrl} request body`,
+                        recorded: apiCall.request,
+                        request: req.body,
+                        diff: requestDiff,
+                      }
+                    },
+                  })
                 }
               }
 
@@ -269,6 +283,21 @@ beforeEach(() => {
                   console.warn(apiCall.response)
                   console.warn('current response body')
                   console.warn(res.body)
+                  // report the difference in the Command Log
+                  Cypress.log({
+                    name: '🔻',
+                    message: `${req.method} ${partialUrl} ${responseDiff}`,
+                    type: 'parent',
+                    consoleProps() {
+                      return {
+                        plugin: label,
+                        call: `${req.method} ${partialUrl} response body`,
+                        recorded: apiCall.response,
+                        response: res.body,
+                        diff: responseDiff,
+                      }
+                    },
+                  })
                 }
                 return res.body
               })
