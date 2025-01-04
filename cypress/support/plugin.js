@@ -2,8 +2,6 @@
 // @ts-check
 
 const label = 'cypress-magic-backend'
-// Cypress.env('magic_backend_mode', 'recording')
-// Cypress.env('magic_backend_mode', 'playback')
 const ModeNames = {
   RECORDING: 'recording',
   PLAYBACK: 'playback',
@@ -40,6 +38,7 @@ function normalizeBackendMode() {
 }
 
 const apiCallsInThisTest = []
+let backendModeInTheCurrentTest = null
 
 before(() => {
   const doc = window.top?.document
@@ -114,6 +113,7 @@ before(() => {
 
 after(() => {
   window.top.magicBackendModeOverride = null
+  backendModeInTheCurrentTest = null
 })
 
 beforeEach(() => {
@@ -128,6 +128,8 @@ beforeEach(() => {
   apiCallsInThisTest.length = 0
 
   const mode = Cypress.env('magic_backend_mode')
+  backendModeInTheCurrentTest = mode
+
   switch (mode) {
     case ModeNames.RECORDING:
       cy.log(`**${label}** Recording mode`)
@@ -151,7 +153,18 @@ beforeEach(() => {
         )
         // for now assuming the file exists
         cy.readFile(filename)
+          .should(Cypress._.noop)
           .then((apiCalls) => {
+            if (!apiCalls) {
+              cy.log(
+                `**${label}** No recorded API calls found for this test`,
+              )
+              cy.log(`**${label}** Running normal test`)
+              // remove the mode so we do not intercept any calls
+              Cypress.env('magic_backend_mode', undefined)
+              return
+            }
+
             let apiCallIndex = 0
             cy.intercept(apiCallsToIntercept, (req) => {
               const apiCall = apiCalls[apiCallIndex]
@@ -187,7 +200,18 @@ beforeEach(() => {
         )
         // for now assuming the file exists
         cy.readFile(filename)
+          .should(Cypress._.noop)
           .then((apiCalls) => {
+            if (!apiCalls) {
+              cy.log(
+                `**${label}** No recorded API calls found for this test`,
+              )
+              cy.log(`**${label}** Running normal test`)
+              // remove the mode so we do not intercept any calls
+              Cypress.env('magic_backend_mode', undefined)
+              return
+            }
+
             let apiCallIndex = 0
             cy.intercept(apiCallsToIntercept, (req) => {
               const apiCall = apiCalls[apiCallIndex]
@@ -240,8 +264,10 @@ function formTestRecordingFilename(currentSpec, currentTest) {
 }
 
 afterEach(() => {
-  const mode = Cypress.env('magic_backend_mode')
-  switch (mode) {
+  // restore the original mode, just in case we had to change it
+  // for a particular test
+  Cypress.env('magic_backend_mode', backendModeInTheCurrentTest)
+  switch (backendModeInTheCurrentTest) {
     case ModeNames.RECORDING:
       const specName = Cypress.spec.relative
       const title = Cypress.currentTest.titlePath.join('_')
