@@ -7,3 +7,7 @@
 ## License
 
 Private
+
+## Misc
+
+Color scheme used "[Holiday Vibes](https://marketplace.visualstudio.com/items?itemName=DragonsRift.holiday-vibes)"
