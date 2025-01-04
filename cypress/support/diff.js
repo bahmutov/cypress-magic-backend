@@ -24,6 +24,18 @@ function diff(previous, current) {
   }
 
   if (typeof previous === 'object') {
+    if (current === null) {
+      return `object became null`
+    }
+
+    if (typeof current !== 'object') {
+      const currentType = typeof current
+      if (currentType === 'undefined') {
+        return `object became undefined`
+      }
+      return `object became ${currentType} ${current}`
+    }
+
     if (typeof current === 'object') {
       const previousKeys = Object.keys(previous)
       const currentKeys = Object.keys(current)
