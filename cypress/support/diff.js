@@ -1,39 +1,68 @@
+function namedStringify(x) {
+  if (x === null) {
+    return 'null'
+  }
+
+  const t = typeof x
+  if (t === 'undefined') {
+    return 'undefined'
+  }
+  return `${t} ${JSON.stringify(x)}`
+}
+
 function diff(previous, current) {
+  //
+  // primitive types
+  //
   if (typeof previous === 'string') {
     if (typeof current === 'string') {
       return
     }
-
-    const currentType = typeof current
-    if (currentType === 'undefined') {
-      return `string "${previous}" became undefined`
-    }
-    return `string "${previous}" became ${currentType} ${current}`
+    return `string "${previous}" became ${namedStringify(current)}`
   }
 
   if (typeof previous === 'number') {
     if (typeof current === 'number') {
       return
     }
-
-    const currentType = typeof current
-    if (currentType === 'undefined') {
-      return `number ${previous} became undefined`
-    }
-    return `number ${previous} became ${currentType} ${current}`
+    return `number ${previous} became ${namedStringify(current)}`
   }
 
+  //
+  // arrays
+  //
+  if (Array.isArray(previous)) {
+    if (!Array.isArray(current)) {
+      return `array became ${namedStringify(current)}`
+    }
+
+    if (previous.length < current.length) {
+      return `array increased its length from ${previous.length} to ${current.length}`
+    }
+
+    if (previous.length > current.length) {
+      return `array decreased its length from ${previous.length} to ${current.length}`
+    }
+
+    // compare each element inside the array
+    for (let i = 0; i < previous.length; i++) {
+      const diffResult = diff(previous[i], current[i])
+      if (diffResult) {
+        return `array element ${i} changed: ${diffResult}`
+      }
+    }
+  }
+
+  //
+  // objects
+  //
   if (typeof previous === 'object') {
     if (current === null) {
       return `object became null`
     }
 
     if (typeof current !== 'object') {
-      const currentType = typeof current
-      if (currentType === 'undefined') {
-        return `object became undefined`
-      }
-      return `object became ${currentType} ${current}`
+      return `object became ${namedStringify(current)}`
     }
 
     if (typeof current === 'object') {
