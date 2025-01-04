@@ -243,14 +243,33 @@ beforeEach(() => {
                     ? req.url.replace(baseUrl, '')
                     : req.url
                   console.warn(
-                    `${label} "${req.method} ${partialUrl}" ${requestDiff}`,
+                    `${label} request "${req.method} ${partialUrl}" ${requestDiff}`,
                   )
+                  console.warn('recorded request body')
+                  console.warn(apiCall.request)
+                  console.warn('current request body')
+                  console.warn(req.body)
+
                   // todo: can we report the difference in the test runner?
                 }
               }
 
               req.continue((res) => {
                 // todo: inspect the response
+                const responseDiff = diff(apiCall.response, res.body)
+                if (responseDiff) {
+                  const baseUrl = Cypress.config('baseUrl')
+                  const partialUrl = baseUrl
+                    ? req.url.replace(baseUrl, '')
+                    : req.url
+                  console.warn(
+                    `${label} response "${req.method} ${partialUrl}" ${responseDiff}`,
+                  )
+                  console.warn('recorded response body')
+                  console.warn(apiCall.response)
+                  console.warn('current response body')
+                  console.warn(res.body)
+                }
                 return res.body
               })
             })
