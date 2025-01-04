@@ -17,3 +17,11 @@ it('compares numbers', () => {
   expect(diff(42, 43)).to.be.undefined
   expect(diff(42, 'hello')).to.equal('number 42 became string hello')
 })
+
+it('compares objects with keys', () => {
+  expect(diff({ foo: 'bar' }, { foo: 'bar' })).to.be.undefined
+  expect(diff({ foo: 'bar' }, {})).to.equal('object lost keys "foo"')
+  expect(diff({ foo: 'bar' }, { bar: 'baz' })).to.equal(
+    'object added keys "bar" and lost keys "foo"',
+  )
+})
