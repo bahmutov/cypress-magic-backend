@@ -6,7 +6,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Cypress run
+
+      - name: Cypress against static backend
         uses: cypress-io/github-action@v6
         with:
           start: npm run start:static
@@ -16,3 +17,16 @@ jobs:
           # and on CI the API backend should be in playback mode
           # and completely stubbed
           CYPRESS_magic_backend_mode: playback
+
+      - name: Cypress inspect against real backend
+        uses: cypress-io/github-action@v6
+        with:
+          # everything should be already installed
+          install: false
+          start: npm start
+        env:
+          # assume the real backend is available
+          # allows each call to go to the real backend
+          # but compares the request and response to the
+          # recorded api calls from JSON files
+          CYPRESS_magic_backend_mode: inspect
