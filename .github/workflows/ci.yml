@@ -1,6 +1,23 @@
 name: ci
 on: push
 jobs:
+  record:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Record responses
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+        env:
+          # record all API calls
+          CYPRESS_magic_backend_mode: recording
+
+      - name: Show changes JSON files
+        run: git status
+
   magic-backend:
     runs-on: ubuntu-24.04
     steps:
@@ -18,11 +35,15 @@ jobs:
           # and completely stubbed
           CYPRESS_magic_backend_mode: playback
 
-      - name: Cypress inspect against real backend
+  inspect-backend:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inspecting against real backend
         uses: cypress-io/github-action@v6
         with:
-          # everything should be already installed
-          install: false
           start: npm start
         env:
           # assume the real backend is available
