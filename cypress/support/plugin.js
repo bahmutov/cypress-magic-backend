@@ -4,6 +4,11 @@
 const label = 'cypress-magic-backend'
 // Cypress.env('magic_backend_mode', 'recording')
 // Cypress.env('magic_backend_mode', 'playback')
+const ModeNames = {
+  RECORDING: 'recording',
+  PLAYBACK: 'playback',
+  INSPECT: 'inspect',
+}
 
 /**
  * We want the user to not worry about the exact precise keywords
@@ -19,17 +24,17 @@ function normalizeBackendMode() {
   switch (mode) {
     case 'record':
     case 'recording':
-      Cypress.env('magic_backend_mode', 'recording')
+      Cypress.env('magic_backend_mode', ModeNames.RECORDING)
       break
     case 'play':
     case 'playback':
-      Cypress.env('magic_backend_mode', 'playback')
+      Cypress.env('magic_backend_mode', ModeNames.PLAYBACK)
       break
     case 'inspect':
     case 'inspecting':
     case 'observe':
     case 'observing':
-      Cypress.env('magic_backend_mode', 'inspect')
+      Cypress.env('magic_backend_mode', ModeNames.INSPECT)
       break
   }
 }
@@ -124,8 +129,7 @@ beforeEach(() => {
 
   const mode = Cypress.env('magic_backend_mode')
   switch (mode) {
-    case 'record':
-    case 'recording':
+    case ModeNames.RECORDING:
       cy.log(`**${label}** Recording mode`)
       cy.intercept(apiCallsToIntercept, (req) => {
         req.continue((res) => {
@@ -138,40 +142,91 @@ beforeEach(() => {
         })
       }).as('🪄 🎥')
       break
-    case 'play':
-    case 'playback':
-      cy.log(`**${label}** Playback mode`)
-      const filename = formTestRecordingFilename(
-        Cypress.spec,
-        Cypress.currentTest,
-      )
-      // for now assuming the file exists
-      cy.readFile(filename)
-        .then((apiCalls) => {
-          let apiCallIndex = 0
-          cy.intercept(apiCallsToIntercept, (req) => {
-            const apiCall = apiCalls[apiCallIndex]
-            if (!apiCall) {
-              throw new Error(
-                `Ran out of recorded API calls at index ${apiCallIndex}`,
-              )
-            }
-            apiCallIndex += 1
-            if (req.method !== apiCall.method) {
-              throw new Error(
-                `Expected method ${apiCall.method} but got ${req.method}`,
-              )
-            }
-            if (req.url !== apiCall.url) {
-              throw new Error(
-                `Expected URL ${apiCall.url} but got ${req.url}`,
-              )
-            }
-            // todo: check the request body
-            req.reply(apiCall.response)
+    case ModeNames.PLAYBACK:
+      {
+        cy.log(`**${label}** Playback mode`)
+        const filename = formTestRecordingFilename(
+          Cypress.spec,
+          Cypress.currentTest,
+        )
+        // for now assuming the file exists
+        cy.readFile(filename)
+          .then((apiCalls) => {
+            let apiCallIndex = 0
+            cy.intercept(apiCallsToIntercept, (req) => {
+              const apiCall = apiCalls[apiCallIndex]
+              if (!apiCall) {
+                throw new Error(
+                  `Ran out of recorded API calls at index ${apiCallIndex}`,
+                )
+              }
+              apiCallIndex += 1
+              if (req.method !== apiCall.method) {
+                throw new Error(
+                  `Expected method ${apiCall.method} but got ${req.method}`,
+                )
+              }
+              if (req.url !== apiCall.url) {
+                throw new Error(
+                  `Expected URL ${apiCall.url} but got ${req.url}`,
+                )
+              }
+              // todo: check the request body
+              req.reply(apiCall.response)
+            })
           })
-        })
-        .as('🪄 🎞️')
+          .as('🪄 🎞️')
+      }
+      break
+    case ModeNames.INSPECT:
+      {
+        cy.log(`**${label}** Inspect mode`)
+        const filename = formTestRecordingFilename(
+          Cypress.spec,
+          Cypress.currentTest,
+        )
+        // for now assuming the file exists
+        cy.readFile(filename)
+          .then((apiCalls) => {
+            let apiCallIndex = 0
+            cy.intercept(apiCallsToIntercept, (req) => {
+              const apiCall = apiCalls[apiCallIndex]
+              if (!apiCall) {
+                throw new Error(
+                  `Ran out of recorded API calls at index ${apiCallIndex}`,
+                )
+              }
+              apiCallIndex += 1
+              if (req.method !== apiCall.method) {
+                throw new Error(
+                  `Expected method ${apiCall.method} but got ${req.method}`,
+                )
+              }
+              // we might have unique parts in the URLs
+              // if (req.url !== apiCall.url) {
+              //   throw new Error(
+              //     `Expected URL ${apiCall.url} but got ${req.url}`,
+              //   )
+              // }
+              if (req.body === apiCall.request) {
+              } else {
+                // todo: inspect the sent request
+                // and intelligently report differences
+                // in values vs types
+                console.log('app sending request')
+                console.log(req.body)
+                console.log('previously recorded request body')
+                console.log(apiCall.request)
+              }
+
+              req.continue((res) => {
+                // todo: inspect the response
+                return res.body
+              })
+            })
+          })
+          .as('🪄 🧐')
+      }
       break
   }
 })
@@ -187,8 +242,7 @@ function formTestRecordingFilename(currentSpec, currentTest) {
 afterEach(() => {
   const mode = Cypress.env('magic_backend_mode')
   switch (mode) {
-    case 'record':
-    case 'recording':
+    case ModeNames.RECORDING:
       const specName = Cypress.spec.relative
       const title = Cypress.currentTest.titlePath.join('_')
       cy.log(
