@@ -1,25 +1,31 @@
-[
-  {
-    "method": "GET",
-    "url": "http://localhost:3000/todos",
-    "request": "",
-    "response": [
-      {
-        "title": "item 1",
-        "completed": false,
-        "id": "0276232434"
-      },
-      {
-        "title": "item 2",
-        "completed": false,
-        "id": "5127680260"
-      }
-    ]
-  },
-  {
-    "method": "DELETE",
-    "url": "http://localhost:3000/todos/5127680260",
-    "request": "",
-    "response": {}
-  }
-]
+{
+  "name": "cypress-magic-backend",
+  "version": "1.0.0",
+  "apiCallsInThisTest": [
+    {
+      "method": "GET",
+      "url": "http://localhost:3000/todos",
+      "request": "",
+      "response": [
+        {
+          "title": "item 1",
+          "completed": false,
+          "id": "8908091016"
+        },
+        {
+          "title": "item 2",
+          "completed": false,
+          "id": "2870301277"
+        }
+      ],
+      "duration": 1016
+    },
+    {
+      "method": "DELETE",
+      "url": "http://localhost:3000/todos/2870301277",
+      "request": "",
+      "response": {},
+      "duration": 1015
+    }
+  ]
+}
