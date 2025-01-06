@@ -161,8 +161,8 @@ beforeEach(() => {
         // for now assuming the file exists
         cy.readFile(filename)
           .should(Cypress._.noop)
-          .then((apiCalls) => {
-            if (!apiCalls) {
+          .then((loaded) => {
+            if (!loaded) {
               cy.log(
                 `**${label}** No recorded API calls found for this test`,
               )
@@ -171,6 +171,7 @@ beforeEach(() => {
               Cypress.env('magic_backend_mode', undefined)
               return
             }
+            const apiCalls = loaded.apiCallsInThisTest
 
             let apiCallIndex = 0
             cy.intercept(apiCallsToIntercept, (req) => {
@@ -208,8 +209,8 @@ beforeEach(() => {
         // for now assuming the file exists
         cy.readFile(filename)
           .should(Cypress._.noop)
-          .then((apiCalls) => {
-            if (!apiCalls) {
+          .then((loaded) => {
+            if (!loaded) {
               cy.log(
                 `**${label}** No recorded API calls found for this test`,
               )
@@ -218,6 +219,7 @@ beforeEach(() => {
               Cypress.env('magic_backend_mode', undefined)
               return
             }
+            const apiCalls = loaded.apiCallsInThisTest
 
             let apiCallIndex = 0
             cy.intercept(apiCallsToIntercept, (req) => {
