@@ -3,5 +3,20 @@
 // in your package.json:
 //  "start": "json-server --static . --watch data.json --middlewares ./slow"
 module.exports = function jsonServerReset(req, res, next) {
-  setTimeout(next, 1000)
+  const defaultDelay = 1000
+  // slow down certain api requests by custom timeouts
+  const customSlowDowns = [
+    // if you want to slow down creating new items
+    // {
+    //   method: 'POST',
+    //   url: '/todos',
+    //   delay: 2000,
+    // },
+  ]
+  const customSlowDown = customSlowDowns.find(
+    (item) => item.method === req.method && item.url === req.url,
+  )
+  const delay = customSlowDown?.delay || defaultDelay
+
+  setTimeout(next, delay)
 }

@@ -11,6 +11,9 @@ const ModeNames = {
   INSPECT: 'inspect',
 }
 
+// todo: could be the user config value
+const apiCallDurationDifferenceThreshold = 500 // ms
+
 /**
  * We want the user to not worry about the exact precise keywords
  * used to set the mode to "recording" or "playback".
@@ -241,6 +244,7 @@ beforeEach(() => {
               //     `Expected URL ${apiCall.url} but got ${req.url}`,
               //   )
               // }
+              const started = +new Date()
               if (req.body === apiCall.request) {
               } else {
                 const requestDiff = diff(apiCall.request, req.body)
@@ -276,6 +280,43 @@ beforeEach(() => {
               }
 
               req.continue((res) => {
+                const finished = +new Date()
+                const duration = finished - started // ms
+                // console.log({
+                //   call: `${req.method} ${req.url}`,
+                //   recordedDuration: apiCall.duration,
+                //   currentDuration: duration,
+                // })
+                if (
+                  Math.abs(duration - apiCall.duration) >
+                  apiCallDurationDifferenceThreshold
+                ) {
+                  // report the difference in the Command Log
+                  const baseUrl = Cypress.config('baseUrl')
+                  const partialUrl = baseUrl
+                    ? req.url.replace(baseUrl, '')
+                    : req.url
+
+                  const name =
+                    apiCall.duration > duration ? '🏎️' : '🚨 🐢'
+                  const durationLabel =
+                    apiCall.duration > duration ? 'faster' : 'slower'
+                  Cypress.log({
+                    name,
+                    message: `${req.method} ${partialUrl} time went from ${apiCall.duration}ms to ${duration}ms`,
+                    type: 'parent',
+                    consoleProps() {
+                      return {
+                        plugin: label,
+                        call: `${req.method} ${partialUrl} duration became ${durationLabel}`,
+                        previously: `${apiCall.duration}ms`,
+                        currently: `${duration}ms`,
+                        diff: Math.abs(duration - apiCall.duration),
+                      }
+                    },
+                  })
+                }
+
                 // todo: inspect the response
                 const responseDiff = diff(apiCall.response, res.body)
                 if (responseDiff) {
