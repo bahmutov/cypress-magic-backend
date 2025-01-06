@@ -2,6 +2,7 @@
 // @ts-check
 
 const { diff } = require('./diff')
+const { name, version } = require('../../package.json')
 
 const label = 'cypress-magic-backend'
 const ModeNames = {
@@ -136,12 +137,16 @@ beforeEach(() => {
     case ModeNames.RECORDING:
       cy.log(`**${label}** Recording mode`)
       cy.intercept(apiCallsToIntercept, (req) => {
+        const started = +new Date()
         req.continue((res) => {
+          const finished = +new Date()
+          const duration = finished - started // ms
           apiCallsInThisTest.push({
             method: req.method,
             url: req.url,
             request: req.body,
             response: res.body,
+            duration,
           })
         })
       }).as('🪄 🎥')
@@ -332,7 +337,12 @@ afterEach(() => {
         Cypress.spec,
         Cypress.currentTest,
       )
-      cy.writeFile(filename, apiCallsInThisTest)
+      const data = {
+        name,
+        version,
+        apiCallsInThisTest,
+      }
+      cy.writeFile(filename, data)
       break
     // for the playback mode we could check that all API calls were used
   }

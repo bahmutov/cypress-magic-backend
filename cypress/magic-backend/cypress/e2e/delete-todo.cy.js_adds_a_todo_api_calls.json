@@ -1,53 +1,61 @@
-[
-  {
-    "method": "GET",
-    "url": "http://localhost:3000/todos",
-    "request": "",
-    "response": []
-  },
-  {
-    "method": "POST",
-    "url": "http://localhost:3000/todos",
-    "request": {
-      "title": "item 1",
-      "completed": false,
-      "id": "0276232434"
+{
+  "name": "cypress-magic-backend",
+  "version": "1.0.0",
+  "apiCallsInThisTest": [
+    {
+      "method": "GET",
+      "url": "http://localhost:3000/todos",
+      "request": "",
+      "response": [],
+      "duration": 1009
     },
-    "response": {
-      "title": "item 1",
-      "completed": false,
-      "id": "0276232434"
-    }
-  },
-  {
-    "method": "POST",
-    "url": "http://localhost:3000/todos",
-    "request": {
-      "title": "item 2",
-      "completed": false,
-      "id": "5127680260"
-    },
-    "response": {
-      "title": "item 2",
-      "completed": false,
-      "id": "5127680260"
-    }
-  },
-  {
-    "method": "GET",
-    "url": "http://localhost:3000/todos",
-    "request": "",
-    "response": [
-      {
+    {
+      "method": "POST",
+      "url": "http://localhost:3000/todos",
+      "request": {
         "title": "item 1",
         "completed": false,
-        "id": "0276232434"
+        "id": "8908091016"
       },
-      {
+      "response": {
+        "title": "item 1",
+        "completed": false,
+        "id": "8908091016"
+      },
+      "duration": 1011
+    },
+    {
+      "method": "POST",
+      "url": "http://localhost:3000/todos",
+      "request": {
         "title": "item 2",
         "completed": false,
-        "id": "5127680260"
-      }
-    ]
-  }
-]
+        "id": "2870301277"
+      },
+      "response": {
+        "title": "item 2",
+        "completed": false,
+        "id": "2870301277"
+      },
+      "duration": 1010
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:3000/todos",
+      "request": "",
+      "response": [
+        {
+          "title": "item 1",
+          "completed": false,
+          "id": "8908091016"
+        },
+        {
+          "title": "item 2",
+          "completed": false,
+          "id": "2870301277"
+        }
+      ],
+      "duration": 1009
+    }
+  ]
+}
