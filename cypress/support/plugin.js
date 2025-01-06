@@ -282,11 +282,11 @@ beforeEach(() => {
               req.continue((res) => {
                 const finished = +new Date()
                 const duration = finished - started // ms
-                console.log({
-                  call: `${req.method} ${req.url}`,
-                  recordedDuration: apiCall.duration,
-                  currentDuration: duration,
-                })
+                // console.log({
+                //   call: `${req.method} ${req.url}`,
+                //   recordedDuration: apiCall.duration,
+                //   currentDuration: duration,
+                // })
                 if (
                   Math.abs(duration - apiCall.duration) >
                   apiCallDurationDifferenceThreshold
@@ -298,9 +298,9 @@ beforeEach(() => {
                     : req.url
 
                   const name =
-                    apiCall.duration < duration ? '🏎️' : '🐢'
-                  const label =
-                    apiCall.duration < duration ? 'faster' : 'slower'
+                    apiCall.duration > duration ? '🏎️' : '🚨 🐢'
+                  const durationLabel =
+                    apiCall.duration > duration ? 'faster' : 'slower'
                   Cypress.log({
                     name,
                     message: `${req.method} ${partialUrl} time went from ${apiCall.duration}ms to ${duration}ms`,
@@ -308,9 +308,9 @@ beforeEach(() => {
                     consoleProps() {
                       return {
                         plugin: label,
-                        call: `${req.method} ${partialUrl} duration is ${label}`,
-                        recorded: `${apiCall.duration}ms`,
-                        current: `${duration}ms`,
+                        call: `${req.method} ${partialUrl} duration became ${durationLabel}`,
+                        previously: `${apiCall.duration}ms`,
+                        currently: `${duration}ms`,
                         diff: Math.abs(duration - apiCall.duration),
                       }
                     },
