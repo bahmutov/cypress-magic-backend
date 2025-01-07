@@ -1,6 +1,6 @@
 # cypress-magic-backend
 
-> It is like a real backend but magically faster
+> It is like a real backend but magically faster and better
 
 ![Magic backend](./images/magic.png)
 

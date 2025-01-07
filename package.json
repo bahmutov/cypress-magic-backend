@@ -13,13 +13,23 @@
     "play": "CYPRESS_magic_backend_mode=playback start-test http://localhost:3000",
     "test:no-backend": "CYPRESS_magic_backend_mode=playback start-test start:static http://localhost:3000"
   },
-  "keywords": [],
+  "keywords": [
+    "cypress",
+    "cypress-plugin",
+    "backend",
+    "mock",
+    "record",
+    "playback",
+    "testing"
+  ],
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "license": "private",
-  "description": "",
+  "description": "It is like a real backend but magically faster and better",
+  "dependencies": {
+    "cypress-cdp": "1.6.28"
+  },
   "devDependencies": {
     "cypress": "13.17.0",
-    "cypress-cdp": "1.6.28",
     "prettier": "3.4.2",
     "start-server-and-test": "2.0.9"
   }
