@@ -29,6 +29,7 @@
     "src",
     "images"
   ],
+  "access": "public",
   "main": "src/index.js",
   "dependencies": {
     "cypress-cdp": "1.6.28"
