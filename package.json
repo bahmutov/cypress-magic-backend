@@ -25,7 +25,8 @@
     "testing"
   ],
   "files": [
-    "src"
+    "src",
+    "images"
   ],
   "main": "src/index.js",
   "dependencies": {

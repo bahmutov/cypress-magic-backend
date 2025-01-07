@@ -37,6 +37,7 @@ function normalizeBackendMode() {
       Cypress.env('magic_backend_mode', ModeNames.RECORDING)
       break
     case 'play':
+    case 'replay':
     case 'playback':
       Cypress.env('magic_backend_mode', ModeNames.PLAYBACK)
       break
