@@ -70,6 +70,9 @@ jobs:
         with:
           runTests: false
 
+      - name: Cleanup package.json file
+        run: node ./scripts/prepublish.js
+
       - name: Semantic Release 🚀
         uses: cycjimmy/semantic-release-action@v4
         with:

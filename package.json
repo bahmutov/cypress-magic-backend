@@ -14,8 +14,7 @@
     "record": "CYPRESS_magic_backend_mode=record start-test http://localhost:3000",
     "play": "CYPRESS_magic_backend_mode=playback start-test http://localhost:3000",
     "test:no-backend": "CYPRESS_magic_backend_mode=playback start-test start:static http://localhost:3000",
-    "semantic-release": "semantic-release",
-    "prepublish": "node ./scripts/prepublish.js"
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "cypress",
