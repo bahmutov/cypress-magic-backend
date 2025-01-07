@@ -51,3 +51,29 @@ jobs:
           # but compares the request and response to the
           # recorded api calls from JSON files
           CYPRESS_magic_backend_mode: inspect
+
+  release:
+    needs: [record, magic-backend, inspect-backend]
+    runs-on: ubuntu-24.04
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Checkout 🛎
+        uses: actions/checkout@v4
+
+      - name: Install everything 📦
+        # https://github.com/cypress-io/github-action
+        uses: cypress-io/github-action@v6
+        with:
+          runTests: false
+
+      - name: Semantic Release 🚀
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          branch: main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
