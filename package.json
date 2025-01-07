@@ -1,7 +1,9 @@
 {
   "name": "cypress-magic-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "description": "It is like a real backend but magically faster and better",
   "scripts": {
     "postinstall": "npm install --prefix app",
     "test": "cypress run",
@@ -22,9 +24,10 @@
     "playback",
     "testing"
   ],
-  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
-  "license": "SEE LICENSE IN LICENSE.md",
-  "description": "It is like a real backend but magically faster and better",
+  "files": [
+    "src"
+  ],
+  "main": "src/index.js",
   "dependencies": {
     "cypress-cdp": "1.6.28"
   },

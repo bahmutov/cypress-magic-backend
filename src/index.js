@@ -2,7 +2,7 @@
 // @ts-check
 
 const { diff } = require('./diff')
-const { name, version } = require('../../package.json')
+const { name, version } = require('../package.json')
 
 const label = 'cypress-magic-backend'
 const ModeNames = {

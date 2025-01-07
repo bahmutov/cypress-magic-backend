@@ -1,4 +1,4 @@
-import { diff } from '../support/diff'
+import { diff } from '../../src/diff'
 
 it('compares strings', () => {
   expect(diff('foo', 'foo')).to.be.undefined
