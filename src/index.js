@@ -58,8 +58,14 @@ let backendModeInTheCurrentTest = null
 //
 
 beforeEach(() => {
+  normalizeBackendMode()
+  // TODO: check if we cannot do a mode for some reason
+  // and set the mode to null
+})
+
+beforeEach(() => {
   const mode = Cypress.env('magic_backend_mode')
-  if (mode === 'recording' || mode === 'inspect') {
+  if (mode === ModeNames.RECORDING || mode === ModeNames.INSPECT) {
     // use the cy.CDP command to disable the network caching
     // https://chromedevtools.github.io/devtools-protocol/tot/Network/#method-setCacheDisabled
     cy.CDP('Network.setCacheDisabled', {
@@ -145,8 +151,6 @@ after(() => {
 })
 
 beforeEach(() => {
-  normalizeBackendMode()
-
   // which calls to intercept?
   const pluginConfig = Cypress.env('magicBackend')
   const apiCallsToIntercept = pluginConfig?.apiCallsToIntercept
