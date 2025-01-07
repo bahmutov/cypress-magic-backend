@@ -1,6 +1,9 @@
 /// <reference types="cypress" />
 // @ts-check
 
+// https://github.com/bahmutov/cypress-cdp
+import 'cypress-cdp'
+
 const { diff } = require('./diff')
 const { name, version } = require('../package.json')
 
@@ -21,10 +24,13 @@ const apiCallDurationDifferenceThreshold = 500 // ms
  * and simply normalize the mode to "recording" or "playback".
  */
 function normalizeBackendMode() {
+  const pluginConfig = Cypress.env('magicBackend')
   const mode =
+    pluginConfig?.mode ||
     Cypress.env('magic_backend_mode') ||
     window?.top?.magicBackendModeOverride
   console.log('**magic_backend_mode**', mode)
+
   switch (mode) {
     case 'record':
     case 'recording':
@@ -126,9 +132,12 @@ beforeEach(() => {
   normalizeBackendMode()
 
   // which calls to intercept?
-  const apiCallsToIntercept = {
-    method: '*',
-    resourceType: 'xhr',
+  const pluginConfig = Cypress.env('magicBackend')
+  const apiCallsToIntercept = pluginConfig?.apiCallsToIntercept
+
+  if (!apiCallsToIntercept) {
+    // do nothing; the user has not set any API calls to intercept
+    return
   }
 
   apiCallsInThisTest.length = 0

@@ -1,9 +1,7 @@
 /// <reference types="cypress" />
 // @ts-check
 
-// https://github.com/bahmutov/cypress-cdp
-import 'cypress-cdp'
-import './plugin'
+import '../../src'
 
 beforeEach(() => {
   const mode = Cypress.env('magic_backend_mode')
