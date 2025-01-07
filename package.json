@@ -23,7 +23,7 @@
     "testing"
   ],
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
-  "license": "private",
+  "license": "SEE LICENSE IN LICENSE.md",
   "description": "It is like a real backend but magically faster and better",
   "dependencies": {
     "cypress-cdp": "1.6.28"
