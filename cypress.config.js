@@ -11,7 +11,7 @@ module.exports = defineConfig({
       // which calls to intercept?, for example
       // to intercept all XHR calls
       // { method: '*', resourceType: 'xhr'}
-      apiCallsToIntercept: { method: '*', resourceType: 'xhr' },
+      apiCallsToIntercept: { method: '*', pathname: '/todos{/*,}' },
     },
   },
   e2e: {
