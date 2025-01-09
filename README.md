@@ -7,6 +7,7 @@
 ## Learn
 
 - 📝 blog post [Magic Backed For E2E Testing](https://glebbahmutov.com/blog/magic-backend/)
+- 📝 blog post [Magic Backed Inspection Mode](https://glebbahmutov.com/blog/magic-backend-inspect-mode/)
 - 🎁 repo [cypress-magic-backend-example](https://github.com/bahmutov/cypress-magic-backend-example)
 
 ## Copyright
