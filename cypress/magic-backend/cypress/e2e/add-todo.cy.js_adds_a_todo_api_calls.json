@@ -5,58 +5,58 @@
   "apiCallsInThisTest": [
     {
       "method": "GET",
-      "url": "http://localhost:3000/todos",
+      "url": "/todos",
       "request": "",
       "response": [],
-      "duration": 1014
+      "duration": 1010
     },
     {
       "method": "POST",
-      "url": "http://localhost:3000/todos",
+      "url": "/todos",
       "request": {
         "title": "item 1",
         "completed": false,
-        "id": "0234371493"
+        "id": "8695633515"
       },
       "response": {
         "title": "item 1",
         "completed": false,
-        "id": "0234371493"
+        "id": "8695633515"
       },
-      "duration": 1011
+      "duration": 1012
     },
     {
       "method": "POST",
-      "url": "http://localhost:3000/todos",
+      "url": "/todos",
       "request": {
         "title": "item 2",
         "completed": false,
-        "id": "6915255854"
+        "id": "6632889391"
       },
       "response": {
         "title": "item 2",
         "completed": false,
-        "id": "6915255854"
+        "id": "6632889391"
       },
-      "duration": 1013
+      "duration": 1009
     },
     {
       "method": "GET",
-      "url": "http://localhost:3000/todos",
+      "url": "/todos",
       "request": "",
       "response": [
         {
           "title": "item 1",
           "completed": false,
-          "id": "0234371493"
+          "id": "8695633515"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "6915255854"
+          "id": "6632889391"
         }
       ],
-      "duration": 1010
+      "duration": 1014
     }
   ]
 }

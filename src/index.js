@@ -227,13 +227,14 @@ beforeEach(() => {
                   `Expected method ${apiCall.method} but got ${req.method}`,
                 )
               }
+
               const partialUrl =
                 baseUrl && req.url.startsWith(baseUrl)
                   ? req.url.replace(baseUrl, '')
                   : req.url
               if (partialUrl !== apiCall.url) {
                 throw new Error(
-                  `Expected URL ${apiCall.url} but got ${partialUrl}`,
+                  `Inspect: expected URL ${apiCall.url} but got ${partialUrl}`,
                 )
               }
               // todo: check the request body
