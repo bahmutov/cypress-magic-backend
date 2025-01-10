@@ -11,6 +11,7 @@
 - 🎁 repo [cypress-magic-backend-example](https://github.com/bahmutov/cypress-magic-backend-example)
 - 📺 videos in the playlist [Cypress Magic Backend](https://www.youtube.com/playlist?list=PLP9o9QNnQuAaCiIN02Y6DUH9kS9LwA--f)
   - [Make E2E Tests Super Fast With cypress-magic-backend Plugin](https://youtu.be/ZhF0SDC1Q0g)
+  - [Run Tests Separately Using cypress-magic-backend Playback Mode](https://youtu.be/VklJ76TfeQk)
 
 ## Copyright
 
