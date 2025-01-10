@@ -162,6 +162,8 @@ beforeEach(() => {
 
   apiCallsInThisTest.length = 0
 
+  const baseUrl = Cypress.config('baseUrl')
+
   const mode = Cypress.env('magic_backend_mode')
   backendModeInTheCurrentTest = mode
 
@@ -173,9 +175,15 @@ beforeEach(() => {
         req.continue((res) => {
           const finished = +new Date()
           const duration = finished - started // ms
+
+          const partialUrl =
+            baseUrl && req.url.startsWith(baseUrl)
+              ? req.url.replace(baseUrl, '')
+              : req.url
+
           apiCallsInThisTest.push({
             method: req.method,
-            url: req.url,
+            url: partialUrl,
             request: req.body,
             response: res.body,
             duration,
@@ -219,9 +227,13 @@ beforeEach(() => {
                   `Expected method ${apiCall.method} but got ${req.method}`,
                 )
               }
-              if (req.url !== apiCall.url) {
+              const partialUrl =
+                baseUrl && req.url.startsWith(baseUrl)
+                  ? req.url.replace(baseUrl, '')
+                  : req.url
+              if (partialUrl !== apiCall.url) {
                 throw new Error(
-                  `Expected URL ${apiCall.url} but got ${req.url}`,
+                  `Expected URL ${apiCall.url} but got ${partialUrl}`,
                 )
               }
               // todo: check the request body
@@ -267,8 +279,14 @@ beforeEach(() => {
                   `Expected method ${apiCall.method} but got ${req.method}`,
                 )
               }
+
+              const partialUrl =
+                baseUrl && req.url.startsWith(baseUrl)
+                  ? req.url.replace(baseUrl, '')
+                  : req.url
+
               // we might have unique parts in the URLs
-              // if (req.url !== apiCall.url) {
+              // if (partialUrl !== apiCall.url) {
               //   throw new Error(
               //     `Expected URL ${apiCall.url} but got ${req.url}`,
               //   )
@@ -278,10 +296,6 @@ beforeEach(() => {
               } else {
                 const requestDiff = diff(apiCall.request, req.body)
                 if (requestDiff) {
-                  const baseUrl = Cypress.config('baseUrl')
-                  const partialUrl = baseUrl
-                    ? req.url.replace(baseUrl, '')
-                    : req.url
                   console.warn(
                     `${label} request "${req.method} ${partialUrl}" ${requestDiff}`,
                   )
@@ -321,11 +335,6 @@ beforeEach(() => {
                   apiCallDurationDifferenceThreshold
                 ) {
                   // report the difference in the Command Log
-                  const baseUrl = Cypress.config('baseUrl')
-                  const partialUrl = baseUrl
-                    ? req.url.replace(baseUrl, '')
-                    : req.url
-
                   const name =
                     apiCall.duration > duration ? '🏎️' : '🚨 🐢'
                   const durationLabel =
@@ -349,7 +358,6 @@ beforeEach(() => {
                 // todo: inspect the response
                 const responseDiff = diff(apiCall.response, res.body)
                 if (responseDiff) {
-                  const baseUrl = Cypress.config('baseUrl')
                   const partialUrl = baseUrl
                     ? req.url.replace(baseUrl, '')
                     : req.url

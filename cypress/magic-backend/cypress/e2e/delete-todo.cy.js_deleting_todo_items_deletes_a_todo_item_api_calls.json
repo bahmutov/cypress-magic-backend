@@ -5,28 +5,28 @@
   "apiCallsInThisTest": [
     {
       "method": "GET",
-      "url": "http://localhost:3000/todos",
+      "url": "/todos",
       "request": "",
       "response": [
         {
           "title": "item 1",
           "completed": false,
-          "id": "6500561500"
+          "id": "5157198250"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "2959385665"
+          "id": "5595849137"
         }
       ],
-      "duration": 1014
+      "duration": 1015
     },
     {
       "method": "DELETE",
-      "url": "http://localhost:3000/todos/2959385665",
+      "url": "/todos/5595849137",
       "request": "",
       "response": {},
-      "duration": 1013
+      "duration": 1018
     }
   ]
 }
