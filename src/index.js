@@ -403,28 +403,33 @@ function formTestRecordingFilename(currentSpec, currentTest) {
   return `cypress/magic-backend/${specName}_${title}_api_calls.json`
 }
 
-afterEach(() => {
+// use the function callback syntax
+// so we can get the current test's state (passed / failed)
+afterEach(function () {
   // restore the original mode, just in case we had to change it
   // for a particular test
   Cypress.env('magic_backend_mode', backendModeInTheCurrentTest)
   switch (backendModeInTheCurrentTest) {
     case ModeNames.RECORDING:
-      const specName = Cypress.spec.relative
-      const title = Cypress.currentTest.titlePath.join('_')
-      cy.log(
-        `Recording ${apiCallsInThisTest.length} API calls for ${specName} "${title}"`,
-      )
-      const filename = formTestRecordingFilename(
-        Cypress.spec,
-        Cypress.currentTest,
-      )
-      const data = {
-        name,
-        version,
-        testName: Cypress.currentTest.titlePath.join(' / '),
-        apiCallsInThisTest,
+      const state = this.currentTest?.state
+      if (state === 'passed') {
+        const specName = Cypress.spec.relative
+        const title = Cypress.currentTest.titlePath.join('_')
+        cy.log(
+          `Recording ${apiCallsInThisTest.length} API calls for ${specName} "${title}"`,
+        )
+        const filename = formTestRecordingFilename(
+          Cypress.spec,
+          Cypress.currentTest,
+        )
+        const data = {
+          name,
+          version,
+          testName: Cypress.currentTest.titlePath.join(' / '),
+          apiCallsInThisTest,
+        }
+        cy.writeFile(filename, data)
       }
-      cy.writeFile(filename, data)
       break
     // for the playback mode we could check that all API calls were used
   }
