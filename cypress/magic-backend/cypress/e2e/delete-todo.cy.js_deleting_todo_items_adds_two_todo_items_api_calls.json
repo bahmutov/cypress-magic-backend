@@ -1,58 +1,59 @@
 {
   "name": "cypress-magic-backend",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
+  "testName": "deleting todo items / adds two todo items",
   "apiCallsInThisTest": [
     {
       "method": "GET",
-      "url": "http://localhost:3000/todos",
+      "url": "/todos",
       "request": "",
       "response": [],
-      "duration": 1009
+      "duration": 1010
     },
     {
       "method": "POST",
-      "url": "http://localhost:3000/todos",
+      "url": "/todos",
       "request": {
         "title": "item 1",
         "completed": false,
-        "id": "8908091016"
+        "id": "5157198250"
       },
       "response": {
         "title": "item 1",
         "completed": false,
-        "id": "8908091016"
+        "id": "5157198250"
       },
       "duration": 1011
     },
     {
       "method": "POST",
-      "url": "http://localhost:3000/todos",
+      "url": "/todos",
       "request": {
         "title": "item 2",
         "completed": false,
-        "id": "2870301277"
+        "id": "5595849137"
       },
       "response": {
         "title": "item 2",
         "completed": false,
-        "id": "2870301277"
+        "id": "5595849137"
       },
-      "duration": 1010
+      "duration": 1011
     },
     {
       "method": "GET",
-      "url": "http://localhost:3000/todos",
+      "url": "/todos",
       "request": "",
       "response": [
         {
           "title": "item 1",
           "completed": false,
-          "id": "8908091016"
+          "id": "5157198250"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "2870301277"
+          "id": "5595849137"
         }
       ],
       "duration": 1009
