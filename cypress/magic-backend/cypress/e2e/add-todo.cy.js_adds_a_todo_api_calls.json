@@ -1,43 +1,44 @@
 {
   "name": "cypress-magic-backend",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
+  "testName": "adds a todo",
   "apiCallsInThisTest": [
     {
       "method": "GET",
       "url": "http://localhost:3000/todos",
       "request": "",
       "response": [],
-      "duration": 1012
-    },
-    {
-      "method": "POST",
-      "url": "http://localhost:3000/todos",
-      "request": {
-        "title": "item 1",
-        "completed": false,
-        "id": "6046564741"
-      },
-      "response": {
-        "title": "item 1",
-        "completed": false,
-        "id": "6046564741"
-      },
       "duration": 1014
     },
     {
       "method": "POST",
       "url": "http://localhost:3000/todos",
       "request": {
+        "title": "item 1",
+        "completed": false,
+        "id": "0234371493"
+      },
+      "response": {
+        "title": "item 1",
+        "completed": false,
+        "id": "0234371493"
+      },
+      "duration": 1011
+    },
+    {
+      "method": "POST",
+      "url": "http://localhost:3000/todos",
+      "request": {
         "title": "item 2",
         "completed": false,
-        "id": "6518646292"
+        "id": "6915255854"
       },
       "response": {
         "title": "item 2",
         "completed": false,
-        "id": "6518646292"
+        "id": "6915255854"
       },
-      "duration": 1011
+      "duration": 1013
     },
     {
       "method": "GET",
@@ -47,15 +48,15 @@
         {
           "title": "item 1",
           "completed": false,
-          "id": "6046564741"
+          "id": "0234371493"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "6518646292"
+          "id": "6915255854"
         }
       ],
-      "duration": 1013
+      "duration": 1010
     }
   ]
 }

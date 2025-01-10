@@ -1,6 +1,7 @@
 {
   "name": "cypress-magic-backend",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
+  "testName": "deleting todo items / deletes a todo item",
   "apiCallsInThisTest": [
     {
       "method": "GET",
@@ -10,22 +11,22 @@
         {
           "title": "item 1",
           "completed": false,
-          "id": "8908091016"
+          "id": "6500561500"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "2870301277"
+          "id": "2959385665"
         }
       ],
-      "duration": 1016
+      "duration": 1014
     },
     {
       "method": "DELETE",
-      "url": "http://localhost:3000/todos/2870301277",
+      "url": "http://localhost:3000/todos/2959385665",
       "request": "",
       "response": {},
-      "duration": 1015
+      "duration": 1013
     }
   ]
 }

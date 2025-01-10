@@ -1,6 +1,7 @@
 {
   "name": "cypress-magic-backend",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
+  "testName": "deleting todo items / adds two todo items",
   "apiCallsInThisTest": [
     {
       "method": "GET",
@@ -15,14 +16,14 @@
       "request": {
         "title": "item 1",
         "completed": false,
-        "id": "8908091016"
+        "id": "6500561500"
       },
       "response": {
         "title": "item 1",
         "completed": false,
-        "id": "8908091016"
+        "id": "6500561500"
       },
-      "duration": 1011
+      "duration": 1010
     },
     {
       "method": "POST",
@@ -30,12 +31,12 @@
       "request": {
         "title": "item 2",
         "completed": false,
-        "id": "2870301277"
+        "id": "2959385665"
       },
       "response": {
         "title": "item 2",
         "completed": false,
-        "id": "2870301277"
+        "id": "2959385665"
       },
       "duration": 1010
     },
@@ -47,15 +48,15 @@
         {
           "title": "item 1",
           "completed": false,
-          "id": "8908091016"
+          "id": "6500561500"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "2870301277"
+          "id": "2959385665"
         }
       ],
-      "duration": 1009
+      "duration": 1011
     }
   ]
 }

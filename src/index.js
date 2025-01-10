@@ -412,6 +412,7 @@ afterEach(() => {
       const data = {
         name,
         version,
+        testName: Cypress.currentTest.titlePath.join(' / '),
         apiCallsInThisTest,
       }
       cy.writeFile(filename, data)
