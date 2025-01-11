@@ -3,7 +3,9 @@
 describe('deleting todo items', () => {
   it('adds two todo items', () => {
     const mode = Cypress.env('magic_backend_mode')
-    if (mode !== 'playback') {
+    mode && cy.log(`during the test the mode is "${mode}"`)
+
+    if (!mode?.startsWith('playback')) {
       cy.request('POST', '/reset', { todos: [] })
     }
 

@@ -8,7 +8,7 @@
       "url": "/todos",
       "request": "",
       "response": [],
-      "duration": 1010
+      "duration": 1008
     },
     {
       "method": "POST",
@@ -16,14 +16,14 @@
       "request": {
         "title": "item 1",
         "completed": false,
-        "id": "5157198250"
+        "id": "5736842182"
       },
       "response": {
         "title": "item 1",
         "completed": false,
-        "id": "5157198250"
+        "id": "5736842182"
       },
-      "duration": 1011
+      "duration": 1008
     },
     {
       "method": "POST",
@@ -31,14 +31,14 @@
       "request": {
         "title": "item 2",
         "completed": false,
-        "id": "5595849137"
+        "id": "9702776765"
       },
       "response": {
         "title": "item 2",
         "completed": false,
-        "id": "5595849137"
+        "id": "9702776765"
       },
-      "duration": 1011
+      "duration": 1008
     },
     {
       "method": "GET",
@@ -48,15 +48,15 @@
         {
           "title": "item 1",
           "completed": false,
-          "id": "5157198250"
+          "id": "5736842182"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "5595849137"
+          "id": "9702776765"
         }
       ],
-      "duration": 1009
+      "duration": 1007
     }
   ]
 }
