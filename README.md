@@ -31,6 +31,29 @@ module.exports = defineConfig({
 })
 ```
 
+Sometimes the API endpoints are complicated to code using a single intercept definition. You can define an array of separate interceptors. For example, TodoMVC app might allow the following API calls only:
+
+```js
+// cypress.config.js
+
+const { defineConfig } = require('cypress')
+
+module.exports = defineConfig({
+  env: {
+    magicBackend: {
+      // API endpoints to intercept using an array definition
+      apiCallsToIntercept: [
+        { method: 'GET', pathname: '/todos' },
+        { method: 'POST', pathname: '/todos' },
+        { method: 'DELETE', pathname: '/todos/*' },
+      ],
+    },
+  },
+})
+```
+
+See [cypress-array.config.js](./cypress-array.config.js). Each intercept will show a number next to its alias, like `🪄 🎞️ 1`, `🪄 🎞️ 2`, etc.
+
 ## Modes
 
 - `recording` spies on all API calls and saves a JSON file with recorded requests and responses

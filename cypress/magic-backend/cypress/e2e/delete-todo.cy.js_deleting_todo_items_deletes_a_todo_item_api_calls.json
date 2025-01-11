@@ -11,19 +11,19 @@
         {
           "title": "item 1",
           "completed": false,
-          "id": "5736842182"
+          "id": "2842655263"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "9702776765"
+          "id": "8223371781"
         }
       ],
-      "duration": 1008
+      "duration": 1027
     },
     {
       "method": "DELETE",
-      "url": "/todos/9702776765",
+      "url": "/todos/8223371781",
       "request": "",
       "response": {},
       "duration": 1013
