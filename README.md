@@ -35,6 +35,7 @@ module.exports = defineConfig({
 
 - `recording` spies on all API calls and saves a JSON file with recorded requests and responses
 - `playback` stubs all API calls using the recorded JSON file. If a test does not have a recorded JSON file, the test runs normally without a magic backend
+- `playback-only` stubs all API calls using the recorded JSON file. If a test does not have a recorded JSON file and the test tries to make an API call, then the test fails immediately
 - `inspect` spies on all API calls in the test, comparing _types_ of the request and response objects
 
 You can control the mode by launching the test runner with the `CYPRESS_magic_backend_mode` variable or by clicking the Magic Backend buttons in the UI.
@@ -62,7 +63,7 @@ Here is a GitHub Actions example
     CYPRESS_magic_backend_mode: playback
 ```
 
-If a test does NOT have a recording, it will execute normally without any magic stubbing.
+If a test does NOT have a recording, it will execute normally without any magic stubbing. If you want the test without a recording to fail on an API call attempt, use `CYPRESS_magic_backend_mode: playback-only` mode.
 
 ## Copyright
 
