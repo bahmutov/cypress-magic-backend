@@ -165,6 +165,13 @@ beforeEach(() => {
     // do nothing; the user has not set any API calls to intercept
     return
   }
+  if (
+    Array.isArray(apiCallsToIntercept) &&
+    apiCallsToIntercept.length === 0
+  ) {
+    // do nothing; the user has set an empty array
+    return
+  }
 
   apiCallsInThisTest.length = 0
 
@@ -175,27 +182,43 @@ beforeEach(() => {
 
   switch (mode) {
     case ModeNames.RECORDING:
-      cy.log(`**${label}** Recording mode`)
-      cy.intercept(apiCallsToIntercept, (req) => {
-        const started = +new Date()
-        req.continue((res) => {
-          const finished = +new Date()
-          const duration = finished - started // ms
+      {
+        cy.log(`**${label}** Recording mode`)
 
-          const partialUrl =
-            baseUrl && req.url.startsWith(baseUrl)
-              ? req.url.replace(baseUrl, '')
-              : req.url
+        const recordOne = (interceptDefinition, alias) => {
+          cy.intercept(interceptDefinition, (req) => {
+            const started = +new Date()
+            req.continue((res) => {
+              const finished = +new Date()
+              const duration = finished - started // ms
 
-          apiCallsInThisTest.push({
-            method: req.method,
-            url: partialUrl,
-            request: req.body,
-            response: res.body,
-            duration,
-          })
-        })
-      }).as('🪄 🎥')
+              const partialUrl =
+                baseUrl && req.url.startsWith(baseUrl)
+                  ? req.url.replace(baseUrl, '')
+                  : req.url
+
+              apiCallsInThisTest.push({
+                method: req.method,
+                url: partialUrl,
+                request: req.body,
+                response: res.body,
+                duration,
+              })
+            })
+          }).as(alias)
+        }
+
+        if (Array.isArray(apiCallsToIntercept)) {
+          apiCallsToIntercept.forEach(
+            (interceptDefinition, index) => {
+              recordOne(interceptDefinition, `🪄 🎥 ${index + 1}`)
+            },
+          )
+        } else {
+          recordOne(apiCallsToIntercept, '🪄 🎥')
+        }
+      }
+
       break
     case ModeNames.PLAYBACK:
       {
@@ -221,64 +244,9 @@ beforeEach(() => {
             const apiCalls = loaded.apiCallsInThisTest
 
             let apiCallIndex = 0
-            cy.intercept(apiCallsToIntercept, (req) => {
-              const apiCall = apiCalls[apiCallIndex]
-              if (!apiCall) {
-                throw new Error(
-                  `Ran out of recorded API calls at index ${apiCallIndex}`,
-                )
-              }
-              apiCallIndex += 1
-              if (req.method !== apiCall.method) {
-                throw new Error(
-                  `Expected method ${apiCall.method} but got ${req.method}`,
-                )
-              }
 
-              const partialUrl =
-                baseUrl && req.url.startsWith(baseUrl)
-                  ? req.url.replace(baseUrl, '')
-                  : req.url
-              if (partialUrl !== apiCall.url) {
-                throw new Error(
-                  `Inspect: expected URL ${apiCall.url} but got ${partialUrl}`,
-                )
-              }
-              // todo: check the request body
-              req.reply(apiCall.response)
-            }).as('🪄 🎞️')
-          })
-      }
-      break
-    case ModeNames.PLAYBACK_ONLY:
-      {
-        cy.log(`**${label}** Playback only mode`)
-        const filename = formTestRecordingFilename(
-          Cypress.spec,
-          Cypress.currentTest,
-        )
-        // for now assuming the file exists
-        cy.readFile(filename)
-          .should(Cypress._.noop)
-          .then((loaded) => {
-            if (!loaded) {
-              cy.log(
-                `**${label}** ⚠️ No recorded API calls found for this test`,
-              )
-              // we still allow running the test
-              // but it will fail if even a single API call is made
-              const fullTitle =
-                Cypress.currentTest.titlePath.join(' / ')
-              cy.intercept(apiCallsToIntercept, (req) => {
-                throw new Error(
-                  `Playback only: intercepted an unexpected API call ${req.method} ${req.url} but test "${fullTitle}" has no recorded API calls`,
-                )
-              })
-            } else {
-              const apiCalls = loaded.apiCallsInThisTest
-
-              let apiCallIndex = 0
-              cy.intercept(apiCallsToIntercept, (req) => {
+            const interceptOne = (interceptDefinition, alias) => {
+              cy.intercept(interceptDefinition, (req) => {
                 const apiCall = apiCalls[apiCallIndex]
                 if (!apiCall) {
                   throw new Error(
@@ -301,9 +269,105 @@ beforeEach(() => {
                     `Inspect: expected URL ${apiCall.url} but got ${partialUrl}`,
                   )
                 }
-                // todo: check the request body
                 req.reply(apiCall.response)
-              }).as('🪄 🎞️ only')
+              }).as(alias)
+            }
+
+            if (Array.isArray(apiCallsToIntercept)) {
+              apiCallsToIntercept.forEach(
+                (interceptDefinition, index) => {
+                  interceptOne(
+                    interceptDefinition,
+                    `🪄 🎞️ ${index + 1}`,
+                  )
+                },
+              )
+            } else {
+              interceptOne(apiCallsToIntercept, '🪄 🎞️')
+            }
+          })
+      }
+      break
+    case ModeNames.PLAYBACK_ONLY:
+      {
+        cy.log(`**${label}** Playback only mode`)
+        const filename = formTestRecordingFilename(
+          Cypress.spec,
+          Cypress.currentTest,
+        )
+        // for now assuming the file exists
+        cy.readFile(filename)
+          .should(Cypress._.noop)
+          .then((loaded) => {
+            if (!loaded) {
+              cy.log(
+                `**${label}** ⚠️ No recorded API calls found for this test`,
+              )
+              // we still allow running the test
+              // but it will fail if even a single API call is made
+              const fullTitle =
+                Cypress.currentTest.titlePath.join(' / ')
+
+              const blockOneIntercept = (interceptDefinition) => {
+                cy.intercept(interceptDefinition, (req) => {
+                  throw new Error(
+                    `Playback only: intercepted an unexpected API call ${req.method} ${req.url} but test "${fullTitle}" has no recorded API calls`,
+                  )
+                })
+              }
+
+              if (Array.isArray(apiCallsToIntercept)) {
+                apiCallsToIntercept.forEach((interceptDefinition) => {
+                  blockOneIntercept(interceptDefinition)
+                })
+              } else {
+                blockOneIntercept(apiCallsToIntercept)
+              }
+            } else {
+              const apiCalls = loaded.apiCallsInThisTest
+
+              let apiCallIndex = 0
+
+              const playBackOne = (interceptDefinition, alias) => {
+                cy.intercept(interceptDefinition, (req) => {
+                  const apiCall = apiCalls[apiCallIndex]
+                  if (!apiCall) {
+                    throw new Error(
+                      `Ran out of recorded API calls at index ${apiCallIndex}`,
+                    )
+                  }
+                  apiCallIndex += 1
+                  if (req.method !== apiCall.method) {
+                    throw new Error(
+                      `Expected method ${apiCall.method} but got ${req.method}`,
+                    )
+                  }
+
+                  const partialUrl =
+                    baseUrl && req.url.startsWith(baseUrl)
+                      ? req.url.replace(baseUrl, '')
+                      : req.url
+                  if (partialUrl !== apiCall.url) {
+                    throw new Error(
+                      `Inspect: expected URL ${apiCall.url} but got ${partialUrl}`,
+                    )
+                  }
+                  req.reply(apiCall.response)
+                }).as(alias)
+              }
+
+              if (Array.isArray(apiCallsToIntercept)) {
+                apiCallsToIntercept.forEach(
+                  (interceptDefinition, index) => {
+                    playBackOne(
+                      interceptDefinition,
+                      `🪄 🎞️ only ${index + 1}`,
+                    )
+                  },
+                )
+              } else {
+                playBackOne(apiCallsToIntercept, '🪄 🎞️ only')
+              }
             }
           })
       }
@@ -331,129 +395,149 @@ beforeEach(() => {
             const apiCalls = loaded.apiCallsInThisTest
 
             let apiCallIndex = 0
-            cy.intercept(apiCallsToIntercept, (req) => {
-              const apiCall = apiCalls[apiCallIndex]
-              if (!apiCall) {
-                throw new Error(
-                  `Ran out of recorded API calls at index ${apiCallIndex}`,
-                )
-              }
-              apiCallIndex += 1
-              if (req.method !== apiCall.method) {
-                throw new Error(
-                  `Expected method ${apiCall.method} but got ${req.method}`,
-                )
-              }
 
-              const partialUrl =
-                baseUrl && req.url.startsWith(baseUrl)
-                  ? req.url.replace(baseUrl, '')
-                  : req.url
-
-              // we might have unique parts in the URLs
-              // if (partialUrl !== apiCall.url) {
-              //   throw new Error(
-              //     `Expected URL ${apiCall.url} but got ${req.url}`,
-              //   )
-              // }
-              const started = +new Date()
-              if (req.body === apiCall.request) {
-              } else {
-                const requestDiff = diff(apiCall.request, req.body)
-                if (requestDiff) {
-                  console.warn(
-                    `${label} request "${req.method} ${partialUrl}" ${requestDiff}`,
+            const inspectOne = (interceptDefinition, alias) => {
+              cy.intercept(interceptDefinition, (req) => {
+                const apiCall = apiCalls[apiCallIndex]
+                if (!apiCall) {
+                  throw new Error(
+                    `Ran out of recorded API calls at index ${apiCallIndex}`,
                   )
-                  console.warn('recorded request body')
-                  console.warn(apiCall.request)
-                  console.warn('current request body')
-                  console.warn(req.body)
-
-                  // report the difference in the Command Log
-                  Cypress.log({
-                    name: '🔺',
-                    message: `${req.method} ${partialUrl} ${requestDiff}`,
-                    type: 'parent',
-                    consoleProps() {
-                      return {
-                        plugin: label,
-                        call: `${req.method} ${partialUrl} request body`,
-                        recorded: apiCall.request,
-                        request: req.body,
-                        diff: requestDiff,
-                      }
-                    },
-                  })
                 }
-              }
-
-              req.continue((res) => {
-                const finished = +new Date()
-                const duration = finished - started // ms
-                // console.log({
-                //   call: `${req.method} ${req.url}`,
-                //   recordedDuration: apiCall.duration,
-                //   currentDuration: duration,
-                // })
-                if (
-                  Math.abs(duration - apiCall.duration) >
-                  apiCallDurationDifferenceThreshold
-                ) {
-                  // report the difference in the Command Log
-                  const name =
-                    apiCall.duration > duration ? '🏎️' : '🚨 🐢'
-                  const durationLabel =
-                    apiCall.duration > duration ? 'faster' : 'slower'
-                  Cypress.log({
-                    name,
-                    message: `${req.method} ${partialUrl} time went from ${apiCall.duration}ms to ${duration}ms`,
-                    type: 'parent',
-                    consoleProps() {
-                      return {
-                        plugin: label,
-                        call: `${req.method} ${partialUrl} duration became ${durationLabel}`,
-                        previously: `${apiCall.duration}ms`,
-                        currently: `${duration}ms`,
-                        diff: Math.abs(duration - apiCall.duration),
-                      }
-                    },
-                  })
+                apiCallIndex += 1
+                if (req.method !== apiCall.method) {
+                  throw new Error(
+                    `Expected method ${apiCall.method} but got ${req.method}`,
+                  )
                 }
 
-                // todo: inspect the response
-                const responseDiff = diff(apiCall.response, res.body)
-                if (responseDiff) {
-                  const partialUrl = baseUrl
+                const partialUrl =
+                  baseUrl && req.url.startsWith(baseUrl)
                     ? req.url.replace(baseUrl, '')
                     : req.url
-                  console.warn(
-                    `${label} response "${req.method} ${partialUrl}" ${responseDiff}`,
-                  )
-                  console.warn('recorded response body')
-                  console.warn(apiCall.response)
-                  console.warn('current response body')
-                  console.warn(res.body)
-                  // report the difference in the Command Log
-                  Cypress.log({
-                    name: '🔻',
-                    message: `${req.method} ${partialUrl} ${responseDiff}`,
-                    type: 'parent',
-                    consoleProps() {
-                      return {
-                        plugin: label,
-                        call: `${req.method} ${partialUrl} response body`,
-                        recorded: apiCall.response,
-                        response: res.body,
-                        diff: responseDiff,
-                      }
-                    },
-                  })
+
+                // we might have unique parts in the URLs
+                // if (partialUrl !== apiCall.url) {
+                //   throw new Error(
+                //     `Expected URL ${apiCall.url} but got ${req.url}`,
+                //   )
+                // }
+                const started = +new Date()
+                if (req.body === apiCall.request) {
+                } else {
+                  const requestDiff = diff(apiCall.request, req.body)
+                  if (requestDiff) {
+                    console.warn(
+                      `${label} request "${req.method} ${partialUrl}" ${requestDiff}`,
+                    )
+                    console.warn('recorded request body')
+                    console.warn(apiCall.request)
+                    console.warn('current request body')
+                    console.warn(req.body)
+
+                    // report the difference in the Command Log
+                    Cypress.log({
+                      name: '🔺',
+                      message: `${req.method} ${partialUrl} ${requestDiff}`,
+                      type: 'parent',
+                      consoleProps() {
+                        return {
+                          plugin: label,
+                          call: `${req.method} ${partialUrl} request body`,
+                          recorded: apiCall.request,
+                          request: req.body,
+                          diff: requestDiff,
+                        }
+                      },
+                    })
+                  }
                 }
-                return res.body
-              })
-            })
+
+                req.continue((res) => {
+                  const finished = +new Date()
+                  const duration = finished - started // ms
+                  // console.log({
+                  //   call: `${req.method} ${req.url}`,
+                  //   recordedDuration: apiCall.duration,
+                  //   currentDuration: duration,
+                  // })
+                  if (
+                    Math.abs(duration - apiCall.duration) >
+                    apiCallDurationDifferenceThreshold
+                  ) {
+                    // report the difference in the Command Log
+                    const name =
+                      apiCall.duration > duration ? '🏎️' : '🚨 🐢'
+                    const durationLabel =
+                      apiCall.duration > duration
+                        ? 'faster'
+                        : 'slower'
+                    Cypress.log({
+                      name,
+                      message: `${req.method} ${partialUrl} time went from ${apiCall.duration}ms to ${duration}ms`,
+                      type: 'parent',
+                      consoleProps() {
+                        return {
+                          plugin: label,
+                          call: `${req.method} ${partialUrl} duration became ${durationLabel}`,
+                          previously: `${apiCall.duration}ms`,
+                          currently: `${duration}ms`,
+                          diff: Math.abs(duration - apiCall.duration),
+                        }
+                      },
+                    })
+                  }
+
+                  // todo: inspect the response
+                  const responseDiff = diff(
+                    apiCall.response,
+                    res.body,
+                  )
+                  if (responseDiff) {
+                    const partialUrl = baseUrl
+                      ? req.url.replace(baseUrl, '')
+                      : req.url
+                    console.warn(
+                      `${label} response "${req.method} ${partialUrl}" ${responseDiff}`,
+                    )
+                    console.warn('recorded response body')
+                    console.warn(apiCall.response)
+                    console.warn('current response body')
+                    console.warn(res.body)
+                    // report the difference in the Command Log
+                    Cypress.log({
+                      name: '🔻',
+                      message: `${req.method} ${partialUrl} ${responseDiff}`,
+                      type: 'parent',
+                      consoleProps() {
+                        return {
+                          plugin: label,
+                          call: `${req.method} ${partialUrl} response body`,
+                          recorded: apiCall.response,
+                          response: res.body,
+                          diff: responseDiff,
+                        }
+                      },
+                    })
+                  }
+                  return res.body
+                })
+              }).as(alias)
+            }
+
+            if (Array.isArray(apiCallsToIntercept)) {
+              apiCallsToIntercept.forEach(
+                (interceptDefinition, index) => {
+                  inspectOne(
+                    interceptDefinition,
+                    `🪄 🧐 ${index + 1}`,
+                  )
+                },
+              )
+            } else {
+              inspectOne(apiCallsToIntercept, '🪄 🧐')
+            }
           })
-          .as('🪄 🧐')
       }
       break
   }

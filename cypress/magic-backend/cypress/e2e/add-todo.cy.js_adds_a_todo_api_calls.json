@@ -16,14 +16,14 @@
       "request": {
         "title": "item 1",
         "completed": false,
-        "id": "3589390495"
+        "id": "7975810148"
       },
       "response": {
         "title": "item 1",
         "completed": false,
-        "id": "3589390495"
+        "id": "7975810148"
       },
-      "duration": 1008
+      "duration": 1011
     },
     {
       "method": "POST",
@@ -31,14 +31,14 @@
       "request": {
         "title": "item 2",
         "completed": false,
-        "id": "2111773750"
+        "id": "9905855799"
       },
       "response": {
         "title": "item 2",
         "completed": false,
-        "id": "2111773750"
+        "id": "9905855799"
       },
-      "duration": 1007
+      "duration": 1010
     },
     {
       "method": "GET",
@@ -48,15 +48,15 @@
         {
           "title": "item 1",
           "completed": false,
-          "id": "3589390495"
+          "id": "7975810148"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "2111773750"
+          "id": "9905855799"
         }
       ],
-      "duration": 1009
+      "duration": 1007
     }
   ]
 }

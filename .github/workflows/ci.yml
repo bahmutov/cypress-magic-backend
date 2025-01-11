@@ -70,8 +70,80 @@ jobs:
           # recorded api calls from JSON files
           CYPRESS_magic_backend_mode: inspect
 
+  # these jobs use a different Cypress config file
+  # were API interception for magic-backend is defined
+  # using an array of interceptors
+  array-record:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Record responses using array defition
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+          config-file: cypress-array.config.js
+        env:
+          # record all API calls
+          CYPRESS_magic_backend_mode: recording
+
+      - name: Show changes JSON files
+        run: git status
+
+  array-magic-backend:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cypress against static backend
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run start:static
+          config-file: cypress-array.config.js
+        env:
+          CYPRESS_magic_backend_mode: playback
+
+  array-playback-only:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cypress against static backend with strict playback mode
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run start:static
+          config-file: cypress-array.config.js
+        env:
+          CYPRESS_magic_backend_mode: playback-only
+
+  array-inspect-backend:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inspecting against real backend
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+          config-file: cypress-array.config.js
+        env:
+          CYPRESS_magic_backend_mode: inspect
+
   release:
-    needs: [record, magic-backend, playback-only, inspect-backend]
+    needs:
+      [
+        record,
+        magic-backend,
+        playback-only,
+        inspect-backend,
+        array-magic-backend,
+        array-playback-only,
+        array-inspect-backend,
+      ]
     runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'
     steps:
