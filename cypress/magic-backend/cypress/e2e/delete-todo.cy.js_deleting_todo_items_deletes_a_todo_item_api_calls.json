@@ -11,22 +11,22 @@
         {
           "title": "item 1",
           "completed": false,
-          "id": "5157198250"
+          "id": "5736842182"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "5595849137"
+          "id": "9702776765"
         }
       ],
-      "duration": 1015
+      "duration": 1008
     },
     {
       "method": "DELETE",
-      "url": "/todos/5595849137",
+      "url": "/todos/9702776765",
       "request": "",
       "response": {},
-      "duration": 1018
+      "duration": 1013
     }
   ]
 }

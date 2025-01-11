@@ -11,6 +11,7 @@ const label = 'cypress-magic-backend'
 const ModeNames = {
   RECORDING: 'recording',
   PLAYBACK: 'playback',
+  PLAYBACK_ONLY: 'playback-only',
   INSPECT: 'inspect',
 }
 
@@ -40,6 +41,9 @@ function normalizeBackendMode() {
     case 'replay':
     case 'playback':
       Cypress.env('magic_backend_mode', ModeNames.PLAYBACK)
+      break
+    case 'playback-only':
+      Cypress.env('magic_backend_mode', ModeNames.PLAYBACK_ONLY)
       break
     case 'inspect':
     case 'inspecting':
@@ -150,6 +154,8 @@ after(() => {
   backendModeInTheCurrentTest = null
 })
 
+function playBackMode() {}
+
 beforeEach(() => {
   // which calls to intercept?
   const pluginConfig = Cypress.env('magicBackend')
@@ -206,6 +212,7 @@ beforeEach(() => {
               cy.log(
                 `**${label}** No recorded API calls found for this test`,
               )
+
               cy.log(`**${label}** Running normal test`)
               // remove the mode so we do not intercept any calls
               Cypress.env('magic_backend_mode', undefined)
@@ -239,9 +246,66 @@ beforeEach(() => {
               }
               // todo: check the request body
               req.reply(apiCall.response)
-            })
+            }).as('🪄 🎞️')
           })
-          .as('🪄 🎞️')
+      }
+      break
+    case ModeNames.PLAYBACK_ONLY:
+      {
+        cy.log(`**${label}** Playback only mode`)
+        const filename = formTestRecordingFilename(
+          Cypress.spec,
+          Cypress.currentTest,
+        )
+        // for now assuming the file exists
+        cy.readFile(filename)
+          .should(Cypress._.noop)
+          .then((loaded) => {
+            if (!loaded) {
+              cy.log(
+                `**${label}** ⚠️ No recorded API calls found for this test`,
+              )
+              // we still allow running the test
+              // but it will fail if even a single API call is made
+              const fullTitle =
+                Cypress.currentTest.titlePath.join(' / ')
+              cy.intercept(apiCallsToIntercept, (req) => {
+                throw new Error(
+                  `Playback only: intercepted an unexpected API call ${req.method} ${req.url} but test "${fullTitle}" has no recorded API calls`,
+                )
+              })
+            } else {
+              const apiCalls = loaded.apiCallsInThisTest
+
+              let apiCallIndex = 0
+              cy.intercept(apiCallsToIntercept, (req) => {
+                const apiCall = apiCalls[apiCallIndex]
+                if (!apiCall) {
+                  throw new Error(
+                    `Ran out of recorded API calls at index ${apiCallIndex}`,
+                  )
+                }
+                apiCallIndex += 1
+                if (req.method !== apiCall.method) {
+                  throw new Error(
+                    `Expected method ${apiCall.method} but got ${req.method}`,
+                  )
+                }
+
+                const partialUrl =
+                  baseUrl && req.url.startsWith(baseUrl)
+                    ? req.url.replace(baseUrl, '')
+                    : req.url
+                if (partialUrl !== apiCall.url) {
+                  throw new Error(
+                    `Inspect: expected URL ${apiCall.url} but got ${partialUrl}`,
+                  )
+                }
+                // todo: check the request body
+                req.reply(apiCall.response)
+              }).as('🪄 🎞️ only')
+            }
+          })
       }
       break
     case ModeNames.INSPECT:
@@ -415,20 +479,24 @@ afterEach(function () {
       if (state === 'passed') {
         const specName = Cypress.spec.relative
         const title = Cypress.currentTest.titlePath.join('_')
-        cy.log(
-          `Recording ${apiCallsInThisTest.length} API calls for ${specName} "${title}"`,
-        )
-        const filename = formTestRecordingFilename(
-          Cypress.spec,
-          Cypress.currentTest,
-        )
-        const data = {
-          name,
-          version,
-          testName: Cypress.currentTest.titlePath.join(' / '),
-          apiCallsInThisTest,
+        if (apiCallsInThisTest.length === 0) {
+          cy.log(`Zero API calls for ${specName} test "${title}"`)
+        } else {
+          cy.log(
+            `Recording ${apiCallsInThisTest.length} API calls for ${specName} test "${title}"`,
+          )
+          const filename = formTestRecordingFilename(
+            Cypress.spec,
+            Cypress.currentTest,
+          )
+          const data = {
+            name,
+            version,
+            testName: Cypress.currentTest.titlePath.join(' / '),
+            apiCallsInThisTest,
+          }
+          cy.writeFile(filename, data)
         }
-        cy.writeFile(filename, data)
       }
       break
     // for the playback mode we could check that all API calls were used
