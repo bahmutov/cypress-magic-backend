@@ -13,6 +13,7 @@ module.exports = defineConfig({
       // { method: '*', resourceType: 'xhr'}
       // a single object definition
       apiCallsToIntercept: { method: '*', pathname: '/todos{/*,}' },
+      apiCallDurationDifferenceThreshold: 500,
     },
   },
   e2e: {

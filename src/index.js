@@ -15,9 +15,6 @@ const ModeNames = {
   INSPECT: 'inspect',
 }
 
-// todo: could be the user config value
-const apiCallDurationDifferenceThreshold = 500 // ms
-
 /**
  * We want the user to not worry about the exact precise keywords
  * used to set the mode to "recording" or "playback".
@@ -153,8 +150,6 @@ after(() => {
   window.top.magicBackendModeOverride = null
   backendModeInTheCurrentTest = null
 })
-
-function playBackMode() {}
 
 beforeEach(() => {
   // which calls to intercept?
@@ -375,6 +370,9 @@ beforeEach(() => {
     case ModeNames.INSPECT:
       {
         cy.log(`**${label}** Inspect mode`)
+        const magicBackend = Cypress.env('magicBackend') || {}
+        const apiCallDurationDifferenceThreshold =
+          magicBackend.apiCallDurationDifferenceThreshold || 500 // ms
         const filename = formTestRecordingFilename(
           Cypress.spec,
           Cypress.currentTest,

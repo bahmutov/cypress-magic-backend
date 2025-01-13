@@ -55,6 +55,22 @@ module.exports = defineConfig({
 
 See [cypress-array.config.js](./cypress-array.config.js). Each intercept will show a number next to its alias, like `🪄 🎞️ 1`, `🪄 🎞️ 2`, etc.
 
+### apiCallDurationDifferenceThreshold
+
+In the `inspect` mode, the duration of each call is compared to the recorded duration. If the duration changes by more than `apiCallDurationDifferenceThreshold` limit, the test gives a warning.
+
+```js
+module.exports = defineConfig({
+  env: {
+    magicBackend: {
+      apiCallDurationDifferenceThreshold: 1000, // ms, 500 is the default
+    },
+  },
+})
+```
+
+![API call has changed its duration](./images/duration-change.png)
+
 ## Modes
 
 - `recording` spies on all API calls and saves a JSON file with recorded requests and responses
