@@ -14,6 +14,16 @@
   - [Run Tests Separately Using cypress-magic-backend Playback Mode](https://youtu.be/VklJ76TfeQk)
   - [Record And Replay Several API Definitions](https://youtu.be/_1fnFiPMYf8)
 
+## Features and capabilities
+
+- recording and replaying GraphQL calls would work too, since you just need to record all `POST /graphql` calls.
+- works with your own `cy.intercept` spying and stubbing, since `cypress-magic-backend` is applied last. Thus your `cy.intercepts` work first
+- check the current mode using the env variable `const mode = Cypress.env('magic_backend_mode')`, possible values are `undefined`, `playback`, `playback-only`, and `inspect`
+
+## Assumptions
+
+1. All API calls in a particular test happen in the same order and can be stubbed in that order. In the future, I will provide a way to do flexible stubbing according to your own matching rules.
+
 ## Configuration
 
 At least you should define which API calls this plugin should intercept. For example, to intercept all calls to `/api` endpoint you could use the `pathname` parameter (similar to how [cy.intercept](https://on.cypress.io/intercept) defined intercepts)
