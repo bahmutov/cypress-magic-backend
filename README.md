@@ -13,6 +13,7 @@
   - [Make E2E Tests Super Fast With cypress-magic-backend Plugin](https://youtu.be/ZhF0SDC1Q0g)
   - [Run Tests Separately Using cypress-magic-backend Playback Mode](https://youtu.be/VklJ76TfeQk)
   - [Record And Replay Several API Definitions](https://youtu.be/_1fnFiPMYf8)
+  - [Detect API Call Duration Changes During Cypress Tests](https://youtu.be/37zTpG4tDxA)
 
 ## Features and capabilities
 
