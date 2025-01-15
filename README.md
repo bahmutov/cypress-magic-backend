@@ -14,6 +14,7 @@
   - [Run Tests Separately Using cypress-magic-backend Playback Mode](https://youtu.be/VklJ76TfeQk)
   - [Record And Replay Several API Definitions](https://youtu.be/_1fnFiPMYf8)
   - [Detect API Call Duration Changes During Cypress Tests](https://youtu.be/37zTpG4tDxA)
+  - [cypress-magic-backend And Your Test Network Intercepts](https://youtu.be/J-E-8eBxFaQ)
 
 ## Features and capabilities
 
