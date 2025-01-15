@@ -4,6 +4,7 @@
 // https://github.com/bahmutov/cypress-cdp
 import 'cypress-cdp'
 
+const { loadRecord, saveRecord } = require('./file-save')
 const { diff } = require('./diff')
 const { name, version } = require('../package.json')
 
@@ -218,14 +219,8 @@ beforeEach(() => {
     case ModeNames.PLAYBACK:
       {
         cy.log(`**${label}** Playback mode`)
-        const filename = formTestRecordingFilename(
-          Cypress.spec,
-          Cypress.currentTest,
-        )
-        // for now assuming the file exists
-        cy.readFile(filename)
-          .should(Cypress._.noop)
-          .then((loaded) => {
+        loadRecord(Cypress.spec, Cypress.currentTest).then(
+          (loaded) => {
             if (!loaded) {
               cy.log(
                 `**${label}** No recorded API calls found for this test`,
@@ -280,20 +275,15 @@ beforeEach(() => {
             } else {
               interceptOne(apiCallsToIntercept, '🪄 🎞️')
             }
-          })
+          },
+        )
       }
       break
     case ModeNames.PLAYBACK_ONLY:
       {
         cy.log(`**${label}** Playback only mode`)
-        const filename = formTestRecordingFilename(
-          Cypress.spec,
-          Cypress.currentTest,
-        )
-        // for now assuming the file exists
-        cy.readFile(filename)
-          .should(Cypress._.noop)
-          .then((loaded) => {
+        loadRecord(Cypress.spec, Cypress.currentTest).then(
+          (loaded) => {
             if (!loaded) {
               cy.log(
                 `**${label}** ⚠️ No recorded API calls found for this test`,
@@ -364,7 +354,8 @@ beforeEach(() => {
                 playBackOne(apiCallsToIntercept, '🪄 🎞️ only')
               }
             }
-          })
+          },
+        )
       }
       break
     case ModeNames.INSPECT:
@@ -373,14 +364,8 @@ beforeEach(() => {
         const magicBackend = Cypress.env('magicBackend') || {}
         const apiCallDurationDifferenceThreshold =
           magicBackend.apiCallDurationDifferenceThreshold || 500 // ms
-        const filename = formTestRecordingFilename(
-          Cypress.spec,
-          Cypress.currentTest,
-        )
-        // for now assuming the file exists
-        cy.readFile(filename)
-          .should(Cypress._.noop)
-          .then((loaded) => {
+        loadRecord(Cypress.spec, Cypress.currentTest).then(
+          (loaded) => {
             if (!loaded) {
               cy.log(
                 `**${label}** No recorded API calls found for this test`,
@@ -535,19 +520,12 @@ beforeEach(() => {
             } else {
               inspectOne(apiCallsToIntercept, '🪄 🧐')
             }
-          })
+          },
+        )
       }
       break
   }
 })
-
-function formTestRecordingFilename(currentSpec, currentTest) {
-  const specName = Cypress.spec.relative
-  const title = Cypress.currentTest.titlePath
-    .join('_')
-    .replaceAll(' ', '_')
-  return `cypress/magic-backend/${specName}_${title}_api_calls.json`
-}
 
 // use the function callback syntax
 // so we can get the current test's state (passed / failed)
@@ -567,17 +545,13 @@ afterEach(function () {
           cy.log(
             `Recording ${apiCallsInThisTest.length} API calls for ${specName} test "${title}"`,
           )
-          const filename = formTestRecordingFilename(
+          saveRecord(
             Cypress.spec,
             Cypress.currentTest,
-          )
-          const data = {
             name,
             version,
-            testName: Cypress.currentTest.titlePath.join(' / '),
             apiCallsInThisTest,
-          }
-          cy.writeFile(filename, data)
+          )
         }
       }
       break
