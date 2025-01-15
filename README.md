@@ -25,9 +25,43 @@
 
 1. All API calls in a particular test happen in the same order and can be stubbed in that order. In the future, I will provide a way to do flexible stubbing according to your own matching rules.
 
+## Installation
+
+This plugin requires both Node and browser registration. To register the plugin Node code, please call its registration function from your cypress config file
+
+```js
+// cypress.config.js
+
+const { defineConfig } = require('cypress')
+// https://github.com/bahmutov/cypress-magic-backend
+const registerMagicBackend = require('cypress-magic-backend/src/plugin')
+
+module.exports = defineConfig({
+  e2e: {
+    setupNodeEvents(on, config) {
+      registerMagicBackend(on, config)
+      // IMPORTANT: return the config object
+      // because it might be modified by the plugin function
+      return config
+    },
+  },
+})
+```
+
+To register the plugin's browser code, include the plugin from your E2E support file
+
+```js
+// cypress/support/e2e.js
+
+// https://github.com/bahmutov/cypress-magic-backend
+import 'cypress-magic-backend'
+```
+
+**Done!**
+
 ## Configuration
 
-At least you should define which API calls this plugin should intercept. For example, to intercept all calls to `/api` endpoint you could use the `pathname` parameter (similar to how [cy.intercept](https://on.cypress.io/intercept) defined intercepts)
+You should define which API routes the plugin should record / replay. For example, to intercept all calls to `/api` endpoint you could use the `pathname` parameter (similar to how [cy.intercept](https://on.cypress.io/intercept) defined intercepts)
 
 ```js
 // cypress.config.js
@@ -40,6 +74,7 @@ module.exports = defineConfig({
       apiCallsToIntercept: { method: '*', pathname: '/api' },
     },
   },
+  // the rest of the config
 })
 ```
 
@@ -61,6 +96,7 @@ module.exports = defineConfig({
       ],
     },
   },
+  // the rest of the config
 })
 ```
 
@@ -77,6 +113,7 @@ module.exports = defineConfig({
       apiCallDurationDifferenceThreshold: 1000, // ms, 500 is the default
     },
   },
+  // the rest of the config
 })
 ```
 
