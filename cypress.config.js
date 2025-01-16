@@ -14,9 +14,13 @@ module.exports = defineConfig({
       // { method: '*', resourceType: 'xhr'}
       // a single object definition
       apiCallsToIntercept: { method: '*', pathname: '/todos{/*,}' },
+      // warn about API calls that change their duration
       apiCallDurationDifferenceThreshold: 500,
+      // store all API calls locally in JSON files
+      store: 'local',
     },
   },
+  defaultBrowser: 'electron',
   e2e: {
     baseUrl: 'http://localhost:3000',
     video: true,

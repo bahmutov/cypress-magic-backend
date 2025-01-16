@@ -32,6 +32,7 @@
   ],
   "access": "public",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "dependencies": {
     "cypress-cdp": "1.6.28"
   },
