@@ -30,6 +30,13 @@ declare namespace MagicBackend {
     apiCallsInThisTest: ApiCallRecord[],
   ) => Cypress.Chainable<null>
 
+  type SaveLoadFunctions = {
+    loadRecord: LoadRecord
+    saveRecord: SaveRecord
+  }
+
+  type StorageMode = 'local' | 'remote'
+
   interface UserConfig {
     mode:
       | 'record'
@@ -44,7 +51,7 @@ declare namespace MagicBackend {
       | 'inspecting'
       | 'observe'
       | 'observing'
-    store: 'local' | 'remote'
+    store: StorageMode
   }
 }
 
