@@ -8,30 +8,10 @@ function formTestRecordingFilename(currentSpec, currentTest) {
 }
 
 /**
- * @typedef { {
- *   method: string,
- *   url: string,
- *   request: string | object,
- *   response: string | object,
- *   duration: number
- * } } ApiCallRecord
- *
- * @typedef { {
- *  pluginName: string,
- *  pluginVersion: string,
- *  specName: string,
- *  testName: string,
- *  apiCallsInThisTest: ApiCallRecord[]
- * } } TestApiRecordData
- */
-
-/**
  * Loads previously recorded API calls for the current test.
  * If the file does not exist, yields null.
  *
- * @param {Cypress.Spec} currentSpec
- * @param {typeof Cypress.currentTest} currentTest
- * @returns {Cypress.Chainable<TestApiRecordData | null>}
+ * @type {MagicBackend.LoadRecord}
  */
 function loadRecord(currentSpec, currentTest) {
   const filename = formTestRecordingFilename(
@@ -45,12 +25,7 @@ function loadRecord(currentSpec, currentTest) {
 /**
  * Saves the API calls made during the test to a file.
  *
- * @param {Cypress.Spec} currentSpec
- * @param {typeof Cypress.currentTest} currentTest
- * @param {string} pluginName The name of the plugin writing the file
- * @param {string} pluginVersion The version of the plugin writing the file
- * @param {Array<ApiCallRecord>} apiCallsInThisTest The API calls made during the test
- * @returns {Cypress.Chainable<null>}
+ * @type {MagicBackend.SaveRecord}
  */
 function saveRecord(
   currentSpec,
@@ -60,7 +35,7 @@ function saveRecord(
   apiCallsInThisTest,
 ) {
   const filename = formTestRecordingFilename(currentSpec, currentTest)
-  /** @type {TestApiRecordData} */
+  /** @type {MagicBackend.TestApiRecordData} */
   const data = {
     pluginName: pluginName,
     pluginVersion: pluginVersion,
@@ -72,7 +47,6 @@ function saveRecord(
 }
 
 module.exports = {
-  formTestRecordingFilename,
   loadRecord,
   saveRecord,
 }

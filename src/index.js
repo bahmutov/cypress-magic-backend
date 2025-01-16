@@ -23,12 +23,17 @@ const ModeNames = {
  * and simply normalize the mode to "recording" or "playback".
  */
 function normalizeBackendMode() {
-  const pluginConfig = Cypress.env('magicBackend')
+  let pluginConfig = Cypress.env('magicBackend')
+  if (!pluginConfig) {
+    pluginConfig = {}
+    Cypress.env('magicBackend', pluginConfig)
+  }
+
   const mode =
     pluginConfig?.mode ||
     Cypress.env('magic_backend_mode') ||
     window?.top?.magicBackendModeOverride
-  console.log('**magic_backend_mode**', mode)
+  // console.log('**magic_backend_mode**', mode)
 
   switch (mode) {
     case 'record':
@@ -50,6 +55,12 @@ function normalizeBackendMode() {
       Cypress.env('magic_backend_mode', ModeNames.INSPECT)
       break
   }
+
+  const store = pluginConfig?.store || 'local'
+  if (!['local', 'remote'].includes(store)) {
+    throw new Error(`${label}: Invalid store "${store}"`)
+  }
+  pluginConfig.store = store
 }
 
 const apiCallsInThisTest = []
