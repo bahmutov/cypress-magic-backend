@@ -17,7 +17,7 @@ module.exports = defineConfig({
       // warn about API calls that change their duration
       apiCallDurationDifferenceThreshold: 500,
       // store all API calls locally in JSON files
-      store: 'local',
+      store: 'remote',
     },
   },
   defaultBrowser: 'electron',

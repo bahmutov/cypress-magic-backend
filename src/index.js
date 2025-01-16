@@ -4,7 +4,8 @@
 // https://github.com/bahmutov/cypress-cdp
 import 'cypress-cdp'
 
-const { loadRecord, saveRecord } = require('./file-save')
+// const { loadRecord, saveRecord } = require('./file-save')
+const getSaveLoadFunctions = require('./init-storage')
 const { diff } = require('./diff')
 const { name, version } = require('../package.json')
 
@@ -180,6 +181,9 @@ beforeEach(() => {
     return
   }
 
+  const storageMode = pluginConfig.store
+  const { loadRecord } = getSaveLoadFunctions(storageMode)
+
   apiCallsInThisTest.length = 0
 
   const baseUrl = Cypress.config('baseUrl')
@@ -190,7 +194,9 @@ beforeEach(() => {
   switch (mode) {
     case ModeNames.RECORDING:
       {
-        cy.log(`**${label}** Recording mode`)
+        cy.log(
+          `**${label}** Recording mode, storage is ${storageMode}`,
+        )
 
         const recordOne = (interceptDefinition, alias) => {
           cy.intercept(interceptDefinition, (req) => {
@@ -229,7 +235,7 @@ beforeEach(() => {
       break
     case ModeNames.PLAYBACK:
       {
-        cy.log(`**${label}** Playback mode`)
+        cy.log(`**${label}** Playback mode from ${storageMode}`)
         loadRecord(Cypress.spec, Cypress.currentTest).then(
           (loaded) => {
             if (!loaded) {
@@ -292,7 +298,7 @@ beforeEach(() => {
       break
     case ModeNames.PLAYBACK_ONLY:
       {
-        cy.log(`**${label}** Playback only mode`)
+        cy.log(`**${label}** Playback only mode from ${storageMode}`)
         loadRecord(Cypress.spec, Cypress.currentTest).then(
           (loaded) => {
             if (!loaded) {
@@ -371,7 +377,7 @@ beforeEach(() => {
       break
     case ModeNames.INSPECT:
       {
-        cy.log(`**${label}** Inspect mode`)
+        cy.log(`**${label}** Inspect mode from ${storageMode}`)
         const magicBackend = Cypress.env('magicBackend') || {}
         const apiCallDurationDifferenceThreshold =
           magicBackend.apiCallDurationDifferenceThreshold || 500 // ms
@@ -544,6 +550,11 @@ afterEach(function () {
   // restore the original mode, just in case we had to change it
   // for a particular test
   Cypress.env('magic_backend_mode', backendModeInTheCurrentTest)
+
+  const pluginConfig = Cypress.env('magicBackend')
+  const storageMode = pluginConfig.store || 'local'
+  const { saveRecord } = getSaveLoadFunctions(storageMode)
+
   switch (backendModeInTheCurrentTest) {
     case ModeNames.RECORDING:
       const state = this.currentTest?.state
@@ -554,7 +565,7 @@ afterEach(function () {
           cy.log(`Zero API calls for ${specName} test "${title}"`)
         } else {
           cy.log(
-            `Recording ${apiCallsInThisTest.length} API calls for ${specName} test "${title}"`,
+            `Recording ${apiCallsInThisTest.length} API calls to ${storageMode} storage for ${specName} test "${title}"`,
           )
           saveRecord(
             Cypress.spec,
