@@ -1,4 +1,35 @@
+/// <reference path="./index.d.ts" />
+
 const label = 'cypress-magic-backend'
+
+/**
+ * @param {MagicBackend.TestApiRecordData} data
+ */
+function saveRemoteData(data) {
+  // send data to the remote server
+  // using apiKey
+  console.log(
+    '%s: saving recorded data for spec "%s" test "%s"',
+    label,
+    data.specName,
+    data.testName,
+  )
+  return data
+}
+
+/**
+ * Finds recorded API calls for the current spec / test.
+ * @param {MagicBackend.LoadRecord} searchInfo
+ */
+function loadRemoteData(searchInfo) {
+  console.log(
+    '%s: loading recorded data for spec "%s" test "%s"',
+    label,
+    searchInfo.specName,
+    searchInfo.testName,
+  )
+  return null
+}
 
 function registerMagicBackend(on, config) {
   const { magicBackend } = config.env
@@ -17,18 +48,8 @@ function registerMagicBackend(on, config) {
     }
     config.env['magic-backend-remote-registered'] = true
     on('task', {
-      'magic-backend:store': (data) => {
-        // send data to the remote server
-        // using apiKey
-        console.log('%s: saving recorded data')
-        return data
-      },
-      'magic-backend:load': () => {
-        // load data from the remote server
-        // using apiKey
-        console.log('%s: loading recorded data')
-        return {}
-      },
+      'magic-backend:store': saveRemoteData,
+      'magic-backend:load': loadRemoteData,
     })
     // IMPORTANT: the user should return the config object
     // from their setupNodeEvents function

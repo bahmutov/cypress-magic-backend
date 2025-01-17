@@ -17,6 +17,11 @@ declare namespace MagicBackend {
     apiCallsInThisTest: ApiCallRecord[]
   }
 
+  type LoadRecordFindInfo = {
+    specName: string
+    testName: string
+  }
+
   type LoadRecord = (
     currentSpec: Cypress.Spec,
     currentTest: typeof Cypress.currentTest,
