@@ -1,11 +1,31 @@
-/// <reference types="cypress" />
+/// <reference path="./index.d.ts" />
 // @ts-check
+
+function checkPluginWasRegistered() {
+  const remoteConfigured = Cypress.env(
+    'magic-backend-remote-registered',
+  )
+  if (!remoteConfigured) {
+    throw new Error(
+      'cypress-magic-backend: you have not configured the remote storage, see https://github.com/bahmutov/cypress-magic-backend',
+    )
+  }
+}
+checkPluginWasRegistered()
 
 /**
  * @type {MagicBackend.LoadRecord}
  */
 function loadRecord(currentSpec, currentTest) {
-  return cy.wrap(null)
+  checkPluginWasRegistered()
+
+  /** @type {MagicBackend.LoadRecordFindInfo} */
+  const findRecordData = {
+    specName: currentSpec.relative,
+    testName: currentTest.titlePath.join(' / '),
+  }
+  // @ts-ignore
+  return cy.task('magic-backend:load', findRecordData, { log: false })
 }
 
 /**
@@ -20,6 +40,8 @@ function saveRecord(
   pluginVersion,
   apiCallsInThisTest,
 ) {
+  checkPluginWasRegistered()
+
   /** @type {MagicBackend.TestApiRecordData} */
   const data = {
     pluginName: pluginName,
@@ -28,7 +50,8 @@ function saveRecord(
     testName: currentTest.titlePath.join(' / '),
     apiCallsInThisTest,
   }
-  return cy.wrap(null)
+
+  return cy.task('magic-backend:store', data, { log: false })
 }
 
 module.exports = {
