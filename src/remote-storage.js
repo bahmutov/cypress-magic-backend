@@ -1,5 +1,14 @@
-/// <reference types="cypress" />
+/// <reference path="./index.d.ts" />
 // @ts-check
+
+const remoteConfigured = Cypress.env(
+  'magic-backend-remote-registered',
+)
+if (!remoteConfigured) {
+  throw new Error(
+    'cypress-magic-backend: you have not configured the remote storage, see https://github.com/bahmutov/cypress-magic-backend',
+  )
+}
 
 /**
  * @type {MagicBackend.LoadRecord}
