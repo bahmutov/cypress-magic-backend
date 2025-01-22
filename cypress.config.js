@@ -16,7 +16,9 @@ module.exports = defineConfig({
       apiCallsToIntercept: { method: '*', pathname: '/todos{/*,}' },
       // warn about API calls that change their duration
       apiCallDurationDifferenceThreshold: 500,
-      // store all API calls locally in JSON files
+      // where to store recorded API calls?
+      // local: store all API calls locally in JSON files
+      // remote: send API calls to a remote server at cypress.tips
       store: 'remote',
     },
   },
