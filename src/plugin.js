@@ -1,10 +1,10 @@
 /// <reference path="./index.d.ts" />
+// @ts-check
 
 const { request } = require('undici')
 
 const label = 'cypress-magic-backend'
-// const magicBackendAtUrl = 'https://cypress.tips/api/magic-backend'
-const magicBackendAtUrl = 'http://localhost:3600/api/magic-backend'
+const magicBackendAtUrl = 'https://cypress.tips/api/magic-backend'
 
 function getApiKey() {
   const apiKey = process.env.MAGIC_BACKEND_API_KEY
@@ -65,16 +65,47 @@ async function saveRemoteData(data) {
 
 /**
  * Finds recorded API calls for the current spec / test.
- * @param {MagicBackend.LoadRecord} searchInfo
+ * @param {MagicBackend.LoadRecordFindInfo} searchInfo
+ * @returns {Promise<MagicBackend.TestApiRecordData|null>}
  */
-function loadRemoteData(searchInfo) {
+async function loadRemoteData(searchInfo) {
   console.log(
     '%s: loading recorded data for spec "%s" test "%s"',
     label,
     searchInfo.specName,
     searchInfo.testName,
   )
-  return null
+
+  const apiKey = getApiKey()
+  const url = `${magicBackendAtUrl}/records`
+
+  const requestBody = {
+    specName: searchInfo.specName,
+    testTitle: searchInfo.testName,
+  }
+
+  const { statusCode, body } = await request(url, {
+    method: 'GET',
+    headers: {
+      'content-type': 'application/json',
+      'x-magic-backend-api-key': apiKey,
+    },
+    body: JSON.stringify(requestBody),
+  })
+  if (statusCode !== 200) {
+    // no big deal, just return null
+    return null
+  }
+  const json = await body.json()
+  // TODO: specify type for json object
+  console.log('%s: %d API calls loaded', label, json.apiCalls.length)
+  return {
+    pluginName: json.meta.pluginName,
+    pluginVersion: json.meta.pluginVersion,
+    specName: json.specName,
+    testName: json.testTitle,
+    apiCallsInThisTest: json.apiCalls,
+  }
 }
 
 function registerMagicBackend(on, config) {
