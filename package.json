@@ -34,13 +34,14 @@
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "dependencies": {
-    "cypress-cdp": "1.6.28"
+    "cypress-cdp": "1.6.28",
+    "undici": "7.3.0"
   },
   "devDependencies": {
     "cypress": "13.17.0",
     "prettier": "3.4.2",
-    "start-server-and-test": "2.0.9",
-    "semantic-release": "^24.2.1"
+    "semantic-release": "^24.2.1",
+    "start-server-and-test": "2.0.9"
   },
   "repository": {
     "type": "git",
