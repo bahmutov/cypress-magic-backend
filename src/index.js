@@ -99,7 +99,7 @@ before(() => {
   let $inspectModeToggle = Cypress.$('#inspect-mode-toggle', doc)
 
   const updateToggles = () => {
-    const mode = window.top.magicBackendLockedMode
+    const mode = window?.top?.magicBackendLockedMode
     $recordModeToggle.prop('checked', mode === ModeNames.RECORDING)
     $replayModeToggle.prop('checked', mode === ModeNames.PLAYBACK)
     $inspectModeToggle.prop('checked', mode === ModeNames.INSPECT)
@@ -107,39 +107,11 @@ before(() => {
 
   if (window.top) {
     updateToggles()
-    const mode = window.top.magicBackendLockedMode
+    const mode = window.top?.magicBackendLockedMode
     if (mode) {
       window.top.magicBackendModeOverride = mode
     }
   }
-
-  $recordModeToggle.on('click', (e) => {
-    e.stopPropagation()
-    if (window.top) {
-      window.top.magicBackendLockedMode = e.target.checked
-        ? ModeNames.RECORDING
-        : null
-    }
-    updateToggles()
-  })
-  $replayModeToggle.on('click', (e) => {
-    e.stopPropagation()
-    if (window.top) {
-      window.top.magicBackendLockedMode = e.target.checked
-        ? ModeNames.PLAYBACK
-        : null
-    }
-    updateToggles()
-  })
-  $inspectModeToggle.on('click', (e) => {
-    e.stopPropagation()
-    if (window.top) {
-      window.top.magicBackendLockedMode = e.target.checked
-        ? ModeNames.INSPECT
-        : null
-    }
-    updateToggles()
-  })
 
   const restartTests = () => {
     let $restartButton = Cypress.$('button.restart', doc)
@@ -156,7 +128,6 @@ before(() => {
   }
 
   const onClickRecordButton = () => {
-    console.log('running the tests and recording the API calls')
     if (window.top) {
       window.top.magicBackendModeOverride = ModeNames.RECORDING
     }
@@ -185,15 +156,18 @@ before(() => {
 
   if (!$recordButton.length) {
     $recordButton = Cypress.$(
-      `<span style="${styles}"><button aria-label="Record API calls" title="${label} Record API calls" id="record-api-calls">🪄 🎥</button>
+      `<span style="${styles}">
+        <button aria-label="Record API calls" title="${label} Record API calls" id="record-api-calls">🪄 🎥</button>
         <input type="checkbox" title="lock record mode" style="${toggleStyles}" id="record-mode-toggle" />
       </span>`,
     )
     $controls.append($recordButton)
+    $recordModeToggle = Cypress.$('#record-mode-toggle', doc)
   }
   if (!$replayButton.length) {
     $replayButton = Cypress.$(
-      `<span style="${styles}"><button aria-label="Replay API calls" title="${label} Replay API calls"   id="replay-api-calls">🪄 🎞️</button>
+      `<span style="${styles}">
+        <button aria-label="Replay API calls" title="${label} Replay API calls"   id="replay-api-calls">🪄 🎞️</button>
         <input type="checkbox" title="lock replay mode" style="${toggleStyles}" id="replay-mode-toggle" />
       </span>`,
     )
@@ -202,14 +176,54 @@ before(() => {
   }
   if (!$inspectButton.length) {
     $inspectButton = Cypress.$(
-      `<span style="${styles}"><button aria-label="Inspect API calls" title="${label} Inspect API calls" id="inspect-api-calls">🪄 🧐</button></span>`,
+      `<span style="${styles}">
+        <button aria-label="Inspect API calls" title="${label} Inspect API calls" id="inspect-api-calls">🪄 🧐</button>
+        <input type="checkbox" title="lock inspect mode" style="${toggleStyles}" id="inspect-mode-toggle" />
+      </span>`,
     )
     $controls.append($inspectButton)
+    $inspectModeToggle = Cypress.$('#inspect-mode-toggle', doc)
   }
 
   $recordButton.on('click', onClickRecordButton)
   $replayButton.on('click', onClickReplayButton)
   $inspectButton.on('click', onClickInspectButton)
+
+  updateToggles()
+
+  $recordModeToggle.on('click', (e) => {
+    e.stopPropagation()
+    if (window.top) {
+      if (window.top.magicBackendLockedMode === ModeNames.RECORDING) {
+        window.top.magicBackendLockedMode = null
+      } else {
+        window.top.magicBackendLockedMode = ModeNames.RECORDING
+      }
+    }
+    updateToggles()
+  })
+  $replayModeToggle.on('click', (e) => {
+    e.stopPropagation()
+    if (window.top) {
+      if (window.top.magicBackendLockedMode === ModeNames.PLAYBACK) {
+        window.top.magicBackendLockedMode = null
+      } else {
+        window.top.magicBackendLockedMode = ModeNames.PLAYBACK
+      }
+    }
+    updateToggles()
+  })
+  $inspectModeToggle.on('click', (e) => {
+    e.stopPropagation()
+    if (window.top) {
+      if (window.top.magicBackendLockedMode === ModeNames.INSPECT) {
+        window.top.magicBackendLockedMode = null
+      } else {
+        window.top.magicBackendLockedMode = ModeNames.INSPECT
+      }
+    }
+    updateToggles()
+  })
 })
 
 after(() => {
