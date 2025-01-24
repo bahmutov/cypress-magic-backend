@@ -17,14 +17,14 @@
       "request": {
         "title": "item 1",
         "completed": false,
-        "id": "2010675280"
+        "id": "9441115698"
       },
       "response": {
         "title": "item 1",
         "completed": false,
-        "id": "2010675280"
+        "id": "9441115698"
       },
-      "duration": 1008
+      "duration": 1009
     },
     {
       "method": "POST",
@@ -32,14 +32,14 @@
       "request": {
         "title": "item 2",
         "completed": false,
-        "id": "2200714287"
+        "id": "3309515708"
       },
       "response": {
         "title": "item 2",
         "completed": false,
-        "id": "2200714287"
+        "id": "3309515708"
       },
-      "duration": 1010
+      "duration": 1009
     },
     {
       "method": "GET",
@@ -49,15 +49,15 @@
         {
           "title": "item 1",
           "completed": false,
-          "id": "2010675280"
+          "id": "9441115698"
         },
         {
           "title": "item 2",
           "completed": false,
-          "id": "2200714287"
+          "id": "3309515708"
         }
       ],
-      "duration": 1008
+      "duration": 1009
     }
   ]
 }

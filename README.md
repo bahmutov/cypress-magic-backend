@@ -129,6 +129,20 @@ module.exports = defineConfig({
 
 You can control the mode by launching the test runner with the `CYPRESS_magic_backend_mode` variable or by clicking the Magic Backend buttons in the UI.
 
+## Lock modes
+
+You can control the current mode by clicking on the mode buttons. Each click sets the mode and restarts the tests.
+
+- button `🪄 🎥` runs the current spec and saves the recorded calls
+- button `🪄 🎞️` runs the current spec using previously recorded network stubs
+- button `🪄 🧐` compares the network calls against previously recorded list
+
+The selected mode resets after running the current spec. If you want to keep the mode, click on the "lock mode" checkbox next to the mode button.
+
+![Lock mode checkboxes](./images/lock-buttons.png)
+
+Then the mode will stay on, even if you restart the tests using the "Restart" button or by pressing the "R" key.
+
 ## Using on CI
 
 Assumption: you have probably recorded backend calls using the local `cypress open` mode. Once you are happy with the recorded JSON files, you can use them on CI during `cypress run` mode. Just set the plugin to the `playback` mode via an environment variable:
