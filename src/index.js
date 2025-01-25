@@ -248,7 +248,7 @@ beforeEach(() => {
     return
   }
 
-  const storageMode = pluginConfig.store
+  const storageMode = pluginConfig.store || 'local'
   const { loadRecord } = getSaveLoadFunctions(storageMode)
 
   apiCallsInThisTest.length = 0

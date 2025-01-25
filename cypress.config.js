@@ -3,6 +3,7 @@ const registerMagicBackend = require('./src/plugin')
 
 module.exports = defineConfig({
   env: {
+    /** @type {Partial<MagicBackend.UserConfig>} */
     magicBackend: {
       // null - do not intercept any API calls
       // recording - record all API calls, see "apiCallsToIntercept" setting

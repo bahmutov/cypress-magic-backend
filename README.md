@@ -120,6 +120,20 @@ module.exports = defineConfig({
 
 ![API call has changed its duration](./images/duration-change.png)
 
+### Types
+
+**Tip:** if you want code editor IntelliSense help you configure this plugin, specify the type for the `magicBackend` object using a JSDoc comment
+
+```js
+module.exports = defineConfig({
+  env: {
+    /** @type {Partial<MagicBackend.UserConfig>} */
+    magicBackend: {
+      ...
+```
+
+IntelliSense should "understand" the right properties available inside the `magicBackend` and suggest the only valid values.
+
 ## Modes
 
 - `recording` spies on all API calls and saves a JSON file with recorded requests and responses
