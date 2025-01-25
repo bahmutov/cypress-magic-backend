@@ -1,4 +1,5 @@
 // https://github.com/bahmutov/cypress-magic-backend
+/// <reference types="cypress" />
 
 declare namespace MagicBackend {
   interface ApiCallRecord {
@@ -66,8 +67,11 @@ declare namespace MagicBackend {
 declare namespace Cypress {
   // https://glebbahmutov.com/blog/cypress-env-types/
   interface Cypress {
-    env(key: 'magicBackend'): Partial<UserConfig>
-    env(key: 'magicBackend', value: Partial<UserConfig>): void
+    env(key: 'magicBackend'): Partial<MagicBackend.UserConfig>
+    env(
+      key: 'magicBackend',
+      value: Partial<MagicBackend.UserConfig>,
+    ): void
   }
 }
 
