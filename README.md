@@ -70,12 +70,33 @@ You should define which API routes the plugin should record / replay. For exampl
 const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
-  env: {
-    magicBackend: {
-      apiCallsToIntercept: { method: '*', pathname: '/api' },
+  e2e: {
+    env: {
+      magicBackend: {
+        apiCallsToIntercept: { method: '*', pathname: '/api' },
+      },
     },
   },
   // the rest of the config
+})
+```
+
+**Important:** make sure the config object is stored inside the `env` object of the `e2e` object, otherwise Cypress would not "combine" `env` blocks correctly. Read the blog post [Cypress v10 Environment Variables](https://glebbahmutov.com/blog/cypress-v10-env/) for more details.
+
+```js
+// 🚨 DO NOT DO THIS!
+module.exports = defineConfig({
+  env: {
+    ...
+  }
+})
+// ✅ CORRECT WAY
+module.exports = defineConfig({
+  e2e: {
+    env: {
+      ...
+    }
+  }
 })
 ```
 
@@ -87,14 +108,16 @@ Sometimes the API endpoints are complicated to code using a single intercept def
 const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
-  env: {
-    magicBackend: {
-      // API endpoints to intercept using an array definition
-      apiCallsToIntercept: [
-        { method: 'GET', pathname: '/todos' },
-        { method: 'POST', pathname: '/todos' },
-        { method: 'DELETE', pathname: '/todos/*' },
-      ],
+  e2e: {
+    env: {
+      magicBackend: {
+        // API endpoints to intercept using an array definition
+        apiCallsToIntercept: [
+          { method: 'GET', pathname: '/todos' },
+          { method: 'POST', pathname: '/todos' },
+          { method: 'DELETE', pathname: '/todos/*' },
+        ],
+      },
     },
   },
   // the rest of the config
@@ -109,9 +132,11 @@ In the `inspect` mode, the duration of each call is compared to the recorded dur
 
 ```js
 module.exports = defineConfig({
-  env: {
-    magicBackend: {
-      apiCallDurationDifferenceThreshold: 1000, // ms, 500 is the default
+  e2e: {
+    env: {
+      magicBackend: {
+        apiCallDurationDifferenceThreshold: 1000, // ms, 500 is the default
+      },
     },
   },
   // the rest of the config
@@ -126,10 +151,14 @@ module.exports = defineConfig({
 
 ```js
 module.exports = defineConfig({
-  env: {
-    /** @type {Partial<MagicBackend.UserConfig>} */
-    magicBackend: {
-      ...
+  e2e: {
+    env: {
+      /** @type {Partial<MagicBackend.UserConfig>} */
+      magicBackend: {
+        ...
+      },
+    },
+  },
 ```
 
 IntelliSense should "understand" the right properties available inside the `magicBackend` and suggest the only valid values.
