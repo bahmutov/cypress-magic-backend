@@ -17,6 +17,7 @@
   - [Record And Replay Several API Definitions](https://youtu.be/_1fnFiPMYf8)
   - [Detect API Call Duration Changes During Cypress Tests](https://youtu.be/37zTpG4tDxA)
   - [cypress-magic-backend And Your Test Network Intercepts](https://youtu.be/J-E-8eBxFaQ)
+  - [Mock But Verify](https://youtu.be/C3yYanKA8P8)
 
 ## Features and capabilities
 
