@@ -9,6 +9,7 @@
 - 📝 blog post [Magic Backed For E2E Testing](https://glebbahmutov.com/blog/magic-backend/)
 - 📝 blog post [Magic Backed Inspection Mode](https://glebbahmutov.com/blog/magic-backend-inspect-mode/)
 - 📝 blog post [Watch Mock And Reload](https://glebbahmutov.com/blog/watch-mock-reload/)
+- 📝 blog post [Mock But Verify](https://glebbahmutov.com/blog/mock-but-verify/)
 - 🎁 repo [cypress-magic-backend-example](https://github.com/bahmutov/cypress-magic-backend-example)
 - 📺 videos in the playlist [Cypress Magic Backend](https://www.youtube.com/playlist?list=PLP9o9QNnQuAaCiIN02Y6DUH9kS9LwA--f)
   - [Make E2E Tests Super Fast With cypress-magic-backend Plugin](https://youtu.be/ZhF0SDC1Q0g)
