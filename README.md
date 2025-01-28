@@ -178,8 +178,8 @@ You can control the mode by launching the test runner with the `CYPRESS_magic_ba
 You can control the current mode by clicking on the mode buttons. Each click sets the mode and restarts the tests.
 
 - button `🪄 🎥` runs the current spec and saves the recorded calls
-- button `🪄 🎞️` runs the current spec using previously recorded network stubs
-- button `🪄 🧐` compares the network calls against previously recorded list
+- button `🪄 🎞️` runs the current spec using previously recorded network stubs. Warns about any request objects changing shape.
+- button `🪄 🧐` compares the network calls against previously recorded list, warns about any request or response objects changing shape.
 
 The selected mode resets after running the current spec. If you want to keep the mode, click on the "lock mode" checkbox next to the mode button.
 
