@@ -64,6 +64,39 @@ function normalizeBackendMode() {
   pluginConfig.store = store
 }
 
+function warnOnRequestDiff(partialUrl, req, apiCall) {
+  if (Cypress._.isEqual(req.body, apiCall.request)) {
+    // exact match
+  } else {
+    const requestDiff = diff(apiCall.request, req.body)
+    if (requestDiff) {
+      console.warn(
+        `${label} request "${req.method} ${partialUrl}" ${requestDiff}`,
+      )
+      console.warn('recorded request body')
+      console.warn(apiCall.request)
+      console.warn('current request body')
+      console.warn(req.body)
+
+      // report the difference in the Command Log
+      Cypress.log({
+        name: '🔺',
+        message: `${req.method} ${partialUrl} ${requestDiff}`,
+        type: 'parent',
+        consoleProps() {
+          return {
+            plugin: label,
+            call: `${req.method} ${partialUrl} request body`,
+            recorded: apiCall.request,
+            request: req.body,
+            diff: requestDiff,
+          }
+        },
+      })
+    }
+  }
+}
+
 const apiCallsInThisTest = []
 let backendModeInTheCurrentTest = null
 
@@ -343,6 +376,8 @@ beforeEach(() => {
                     `Inspect: expected URL ${apiCall.url} but got ${partialUrl}`,
                   )
                 }
+
+                warnOnRequestDiff(partialUrl, req, apiCall)
                 req.reply(apiCall.response)
               }).as(alias)
             }
@@ -421,6 +456,8 @@ beforeEach(() => {
                       `Inspect: expected URL ${apiCall.url} but got ${partialUrl}`,
                     )
                   }
+
+                  warnOnRequestDiff(partialUrl, req, apiCall)
                   req.reply(apiCall.response)
                 }).as(alias)
               }
@@ -490,35 +527,7 @@ beforeEach(() => {
                 //   )
                 // }
                 const started = +new Date()
-                if (req.body === apiCall.request) {
-                } else {
-                  const requestDiff = diff(apiCall.request, req.body)
-                  if (requestDiff) {
-                    console.warn(
-                      `${label} request "${req.method} ${partialUrl}" ${requestDiff}`,
-                    )
-                    console.warn('recorded request body')
-                    console.warn(apiCall.request)
-                    console.warn('current request body')
-                    console.warn(req.body)
-
-                    // report the difference in the Command Log
-                    Cypress.log({
-                      name: '🔺',
-                      message: `${req.method} ${partialUrl} ${requestDiff}`,
-                      type: 'parent',
-                      consoleProps() {
-                        return {
-                          plugin: label,
-                          call: `${req.method} ${partialUrl} request body`,
-                          recorded: apiCall.request,
-                          request: req.body,
-                          diff: requestDiff,
-                        }
-                      },
-                    })
-                  }
-                }
+                warnOnRequestDiff(partialUrl, req, apiCall)
 
                 req.continue((res) => {
                   const finished = +new Date()
