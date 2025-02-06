@@ -230,7 +230,7 @@ module.exports = defineConfig({
         // where to store recorded API calls?
         // local: store all API calls locally in JSON files
         // remote: send API calls to a remote server at cypress.tips
-        store: 'local',
+        store: 'remote',
       },
     },
   },
