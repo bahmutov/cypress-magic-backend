@@ -214,6 +214,37 @@ Here is a GitHub Actions example
 
 If a test does NOT have a recording, it will execute normally without any magic stubbing. If you want the test without a recording to fail on an API call attempt, use `CYPRESS_magic_backend_mode: playback-only` mode.
 
+## magic-backend as a service
+
+> [!WARNING]
+> The remote storage is currently in the experimental development stage.
+
+This plugin supports the remote storing of recorded API network calls. By default, all recorded information is stored in the local JSON files. You can point at the remote service using the config:
+
+```js
+module.exports = defineConfig({
+  e2e: {
+    env: {
+      /** @type {Partial<MagicBackend.UserConfig>} */
+      magicBackend: {
+        // where to store recorded API calls?
+        // local: store all API calls locally in JSON files
+        // remote: send API calls to a remote server at cypress.tips
+        store: 'local',
+      },
+    },
+  },
+})
+```
+
+To authenticate, you need to provide the API key via an environment variable
+
+```
+$ MAGIC_BACKEND_API_KEY=mb.... npx cypress open
+```
+
+If you are interested in this service, please [provide your email](https://forms.gle/RZWQh5st8URrYowW6) to get notified when it becomes generally available or is beta preview.
+
 ## Copyright
 
 Copyright ©️ 2025 Gleb Bahmutov
