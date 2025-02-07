@@ -4,6 +4,9 @@
 const { request } = require('undici')
 
 const label = 'cypress-magic-backend'
+// local testing
+// const magicBackendAtUrl = 'http://localhost:3600/api/magic-backend'
+// production remote
 const magicBackendAtUrl = 'https://cypress.tips/api/magic-backend'
 
 function getApiKey() {
@@ -22,13 +25,16 @@ function getApiKey() {
  * @param {MagicBackend.TestApiRecordData} data
  */
 async function saveRemoteData(data) {
+  const testState = data.testState || 'passed'
+
   // send data to the remote server
   // using apiKey
   console.log(
-    '%s: saving recorded data for spec "%s" test "%s"',
+    '%s: saving recorded data for spec "%s" test "%s" that "%s"',
     label,
     data.specName,
     data.testName,
+    testState,
   )
 
   const apiKey = getApiKey()
@@ -38,6 +44,7 @@ async function saveRemoteData(data) {
     specName: data.specName,
     testTitle: data.testName,
     apiCalls: data.apiCallsInThisTest,
+    testState,
     meta: {
       plugin: data.pluginName,
       version: data.pluginVersion,
@@ -96,8 +103,8 @@ async function loadRemoteData(searchInfo) {
     // no big deal, just return null
     return null
   }
-  const json = await body.json()
   // TODO: specify type for json object
+  const json = await body.json()
   console.log('%s: %d API calls loaded', label, json.apiCalls.length)
   return {
     pluginName: json.meta.pluginName,

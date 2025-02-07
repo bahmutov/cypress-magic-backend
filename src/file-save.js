@@ -33,7 +33,15 @@ function saveRecord(
   pluginName,
   pluginVersion,
   apiCallsInThisTest,
+  testState = 'passed',
 ) {
+  if (testState !== 'passed') {
+    // locally we only write successful test API recordings
+    return cy.log(
+      `Test ${currentTest.title} did not pass, not saving API calls`,
+    )
+  }
+
   const filename = formTestRecordingFilename(currentSpec, currentTest)
   /** @type {MagicBackend.TestApiRecordData} */
   const data = {

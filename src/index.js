@@ -16,6 +16,12 @@ const ModeNames = {
   PLAYBACK_ONLY: 'playback-only',
   INSPECT: 'inspect',
 }
+const StorageModeNames = {
+  /** @type {MagicBackend.StorageMode} */
+  LOCAL: 'local',
+  /** @type {MagicBackend.StorageMode} */
+  REMOTE: 'remote',
+}
 
 /**
  * We want the user to not worry about the exact precise keywords
@@ -57,8 +63,9 @@ function normalizeBackendMode() {
       break
   }
 
-  const store = pluginConfig?.store || 'local'
-  if (!['local', 'remote'].includes(store)) {
+  const store = pluginConfig?.store || StorageModeNames.LOCAL
+  const validStoreNames = Object.values(StorageModeNames)
+  if (!validStoreNames.includes(store)) {
     throw new Error(`${label}: Invalid store "${store}"`)
   }
   pluginConfig.store = store
@@ -281,7 +288,7 @@ beforeEach(() => {
     return
   }
 
-  const storageMode = pluginConfig.store || 'local'
+  const storageMode = pluginConfig.store || StorageModeNames.LOCAL
   const { loadRecord } = getSaveLoadFunctions(storageMode)
 
   apiCallsInThisTest.length = 0
@@ -628,12 +635,13 @@ afterEach(function () {
   Cypress.env('magic_backend_mode', backendModeInTheCurrentTest)
 
   const pluginConfig = Cypress.env('magicBackend')
-  const storageMode = pluginConfig.store || 'local'
+  const storageMode = pluginConfig.store || StorageModeNames.LOCAL
   const { saveRecord } = getSaveLoadFunctions(storageMode)
 
   switch (backendModeInTheCurrentTest) {
     case ModeNames.RECORDING:
       const state = this.currentTest?.state
+      // should we always record... Not sure yet
       if (state === 'passed') {
         const specName = Cypress.spec.relative
         const title = Cypress.currentTest.titlePath.join('_')
@@ -650,6 +658,31 @@ afterEach(function () {
             version,
             apiCallsInThisTest,
           )
+        }
+      }
+      break
+    case ModeNames.INSPECT:
+      if (storageMode === StorageModeNames.REMOTE) {
+        // save the recording, even if the test failed
+        const state = this.currentTest?.state
+        if (state === 'passed' || state === 'failed') {
+          const specName = Cypress.spec.relative
+          const title = Cypress.currentTest.titlePath.join('_')
+          if (apiCallsInThisTest.length === 0) {
+            cy.log(`Zero API calls for ${specName} test "${title}"`)
+          } else {
+            cy.log(
+              `Saving ${apiCallsInThisTest.length} API calls to ${storageMode} storage for ${specName} test "${title}" that ${state}`,
+            )
+            saveRecord(
+              Cypress.spec,
+              Cypress.currentTest,
+              name,
+              version,
+              apiCallsInThisTest,
+              state,
+            )
+          }
         }
       }
       break

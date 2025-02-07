@@ -39,6 +39,7 @@ function saveRecord(
   pluginName,
   pluginVersion,
   apiCallsInThisTest,
+  testState = 'passed',
 ) {
   checkPluginWasRegistered()
 
@@ -48,6 +49,7 @@ function saveRecord(
     pluginVersion: pluginVersion,
     specName: currentSpec.relative,
     testName: currentTest.titlePath.join(' / '),
+    testState,
     apiCallsInThisTest,
   }
 
