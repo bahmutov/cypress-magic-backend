@@ -4,6 +4,9 @@
 const { request } = require('undici')
 
 const label = 'cypress-magic-backend'
+// local testing
+// const magicBackendAtUrl = 'http://localhost:3600/api/magic-backend'
+// production remote
 const magicBackendAtUrl = 'https://cypress.tips/api/magic-backend'
 
 function getApiKey() {
@@ -100,8 +103,8 @@ async function loadRemoteData(searchInfo) {
     // no big deal, just return null
     return null
   }
-  const json = await body.json()
   // TODO: specify type for json object
+  const json = await body.json()
   console.log('%s: %d API calls loaded', label, json.apiCalls.length)
   return {
     pluginName: json.meta.pluginName,
