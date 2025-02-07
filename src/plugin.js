@@ -22,13 +22,16 @@ function getApiKey() {
  * @param {MagicBackend.TestApiRecordData} data
  */
 async function saveRemoteData(data) {
+  const testState = data.testState || 'passed'
+
   // send data to the remote server
   // using apiKey
   console.log(
-    '%s: saving recorded data for spec "%s" test "%s"',
+    '%s: saving recorded data for spec "%s" test "%s" that "%s"',
     label,
     data.specName,
     data.testName,
+    testState,
   )
 
   const apiKey = getApiKey()
@@ -38,6 +41,7 @@ async function saveRemoteData(data) {
     specName: data.specName,
     testTitle: data.testName,
     apiCalls: data.apiCallsInThisTest,
+    testState,
     meta: {
       plugin: data.pluginName,
       version: data.pluginVersion,

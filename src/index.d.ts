@@ -20,6 +20,7 @@ declare namespace MagicBackend {
     specName: string
     testName: string
     apiCallsInThisTest: ApiCallRecord[]
+    testState?: 'passed' | 'failed'
   }
 
   type LoadRecordFindInfo = {
@@ -38,6 +39,7 @@ declare namespace MagicBackend {
     pluginName: string,
     pluginVersion: string,
     apiCallsInThisTest: ApiCallRecord[],
+    testState?: 'passed' | 'failed',
   ) => Cypress.Chainable<null>
 
   type SaveLoadFunctions = {
