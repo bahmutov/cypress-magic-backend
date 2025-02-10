@@ -144,16 +144,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Write the cypress.env.json file 📝
-        run: |
-          echo '{ "magicBackend": { "mode":"recording", "store":"remote" } }' > cypress.env.json
-
       - name: Record responses
         uses: cypress-io/github-action@v6
         with:
           start: npm start
         env:
           MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
+          CYPRESS_magicBackend: '{ "mode":"recording", "store":"remote" }'
+          DEBUG: cypress-magic-backend
 
   release:
     needs:

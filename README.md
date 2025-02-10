@@ -245,6 +245,14 @@ $ MAGIC_BACKEND_API_KEY=mb.... npx cypress open
 
 If you are interested in this service, please [provide your email](https://forms.gle/RZWQh5st8URrYowW6) to get notified when it becomes generally available or is beta preview.
 
+## Debug
+
+This package uses [debug](https://github.com/debug-js/debug#readme) to write verbose logs. To see them during runtime, run with the environment variable `DEBUG=cypress-magic-backend`
+
+```
+$ DEBUG=cypress-magic-backend npx cypress run
+```
+
 ## Copyright
 
 Copyright ©️ 2025 Gleb Bahmutov

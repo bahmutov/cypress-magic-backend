@@ -35,6 +35,7 @@
   "types": "src/index.d.ts",
   "dependencies": {
     "cypress-cdp": "1.6.28",
+    "debug": "4.4.0",
     "undici": "7.3.0"
   },
   "devDependencies": {

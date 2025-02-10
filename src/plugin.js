@@ -2,6 +2,7 @@
 // @ts-check
 
 const { request } = require('undici')
+const debug = require('debug')('cypress-magic-backend')
 
 const label = 'cypress-magic-backend'
 // local testing
@@ -39,6 +40,7 @@ async function saveRemoteData(data) {
 
   const apiKey = getApiKey()
   const url = `${magicBackendAtUrl}/records`
+  debug('saving the recording to %s', url)
 
   const body = {
     specName: data.specName,
