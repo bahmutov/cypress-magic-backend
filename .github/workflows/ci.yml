@@ -161,10 +161,17 @@ jobs:
           CYPRESS_magicBackendAdd: '{ "mode":"playback", "store":"remote" }'
           DEBUG: cypress-magic-backend
 
+  inspect-remote:
+    # once we have recorded the remote API we can test the inspect mode
+    needs: record-remote
+    runs-on: ubuntu-24.04
+    name: Inspecting remote API
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Inspect
         uses: cypress-io/github-action@v6
         with:
-          install: false
           # why do we need to start the server again here?
           # shouldn't it be running from the previous step?
           start: npm start
@@ -184,6 +191,7 @@ jobs:
         array-playback-only,
         array-inspect-backend,
         record-remote,
+        inspect-remote,
       ]
     runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'
