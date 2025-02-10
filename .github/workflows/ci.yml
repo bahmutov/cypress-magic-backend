@@ -150,7 +150,7 @@ jobs:
           start: npm start
         env:
           MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
-          CYPRESS_magicBackend: '{ "mode":"recording", "store":"remote" }'
+          CYPRESS_magicBackendAdd: '{ "mode":"recording", "store":"remote" }'
           DEBUG: cypress-magic-backend
 
   release:
