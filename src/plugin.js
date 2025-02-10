@@ -2,6 +2,7 @@
 // @ts-check
 
 const { request } = require('undici')
+const debug = require('debug')('cypress-magic-backend')
 
 const label = 'cypress-magic-backend'
 // local testing
@@ -39,6 +40,7 @@ async function saveRemoteData(data) {
 
   const apiKey = getApiKey()
   const url = `${magicBackendAtUrl}/records`
+  debug('saving the recording to %s', url)
 
   const body = {
     specName: data.specName,
@@ -115,11 +117,40 @@ async function loadRemoteData(searchInfo) {
   }
 }
 
+/**
+ * Normalizes the config object to ensure that the magicBackend config
+ * is what the user wants it to be.
+ * 1. if the env object includes both magicBackend and magicBackendAdd
+ * then the result is the original config with the magicBackendAdd spread
+ */
+function addAnyConfigs(config) {
+  const { magicBackend, magicBackendAdd } = config.env
+  debug('magic backend config %o', magicBackend)
+  debug('magic backend config add %o', magicBackendAdd)
+  if (!magicBackend) {
+    if (magicBackendAdd) {
+      config.env.magicBackend = magicBackendAdd
+      return
+    }
+  }
+  if (magicBackend && magicBackendAdd) {
+    debug('spreading the additional options')
+    config.env.magicBackend = {
+      ...magicBackend,
+      ...magicBackendAdd,
+    }
+  }
+}
+
 function registerMagicBackend(on, config) {
+  addAnyConfigs(config)
   const { magicBackend } = config.env
+
   if (!magicBackend) {
     return
   }
+
+  debug('final plugin options %o', magicBackend)
 
   if (magicBackend.store === 'remote') {
     getApiKey()

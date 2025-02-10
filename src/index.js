@@ -635,6 +635,7 @@ afterEach(function () {
   Cypress.env('magic_backend_mode', backendModeInTheCurrentTest)
 
   const pluginConfig = Cypress.env('magicBackend')
+  // console.log(pluginConfig)
   const storageMode = pluginConfig.store || StorageModeNames.LOCAL
   const { saveRecord } = getSaveLoadFunctions(storageMode)
 

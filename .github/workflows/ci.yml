@@ -14,7 +14,6 @@ jobs:
         env:
           # record all API calls
           CYPRESS_magic_backend_mode: recording
-          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
 
       - name: Show changes JSON files
         run: git status
@@ -35,7 +34,6 @@ jobs:
           # and on CI the API backend should be in playback mode
           # and completely stubbed
           CYPRESS_magic_backend_mode: playback
-          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
 
   playback-only:
     runs-on: ubuntu-24.04
@@ -54,7 +52,6 @@ jobs:
           # and if a test has no recording, but tries to call API
           # the test should fail
           CYPRESS_magic_backend_mode: playback-only
-          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
 
   inspect-backend:
     runs-on: ubuntu-24.04
@@ -72,7 +69,6 @@ jobs:
           # but compares the request and response to the
           # recorded api calls from JSON files
           CYPRESS_magic_backend_mode: inspect
-          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
 
   # these jobs use a different Cypress config file
   # were API interception for magic-backend is defined
@@ -137,6 +133,68 @@ jobs:
         env:
           CYPRESS_magic_backend_mode: inspect
 
+  record-remote:
+    runs-on: ubuntu-24.04
+    name: Testing the remote API
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Record responses
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+        env:
+          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
+          CYPRESS_magicBackendAdd: '{ "mode":"recording", "store":"remote" }'
+          DEBUG: cypress-magic-backend
+
+      # once we recorded to the remote API we can test the replay
+      - name: Replay
+        uses: cypress-io/github-action@v6
+        with:
+          # we have already installed everything
+          # and the web server should be running
+          install: false
+        env:
+          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
+          CYPRESS_magicBackendAdd: '{ "mode":"playback", "store":"remote" }'
+          DEBUG: cypress-magic-backend
+
+  replay-remote:
+    # once we have recorded the remote API we can test the replay mode
+    needs: record-remote
+    runs-on: ubuntu-24.04
+    name: Inspecting remote API
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Inspect
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+        env:
+          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
+          CYPRESS_magicBackendAdd: '{ "mode":"replay", "store":"remote" }'
+          DEBUG: cypress-magic-backend
+
+  inspect-remote:
+    # once we have recorded the remote API we can test the inspect mode
+    needs: record-remote
+    runs-on: ubuntu-24.04
+    name: Inspecting remote API
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Inspect
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+        env:
+          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
+          CYPRESS_magicBackendAdd: '{ "mode":"inspect", "store":"remote" }'
+          DEBUG: cypress-magic-backend
+
   release:
     needs:
       [
@@ -147,6 +205,9 @@ jobs:
         array-magic-backend,
         array-playback-only,
         array-inspect-backend,
+        record-remote,
+        replay-remote,
+        inspect-remote,
       ]
     runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'

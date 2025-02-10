@@ -214,6 +214,23 @@ Here is a GitHub Actions example
 
 If a test does NOT have a recording, it will execute normally without any magic stubbing. If you want the test without a recording to fail on an API call attempt, use `CYPRESS_magic_backend_mode: playback-only` mode.
 
+### Passing additional options
+
+Since the plugin's config is a complex object, we cannot selectively overwrite some fields. Thus you have two choices:
+
+1. Pass an entire config object using any Cypress config way
+
+```
+$ CYPRESS_magicBackend='{ "mode":"recording", "store":"remote", "apiCallsToIntercept":"..." }' npx cypress run
+```
+
+2. Use the configuration from the `cypress.config.js` file and pass any additional options in the `magicBackendAdd` object
+
+```
+$ CYPRESS_magicBackendAdd='{ "mode":"recording" }' npx cypress run
+# Cypress will combine the `magicBackend` with the above object
+```
+
 ## magic-backend as a service
 
 > [!WARNING]
@@ -244,6 +261,14 @@ $ MAGIC_BACKEND_API_KEY=mb.... npx cypress open
 ```
 
 If you are interested in this service, please [provide your email](https://forms.gle/RZWQh5st8URrYowW6) to get notified when it becomes generally available or is beta preview.
+
+## Debug
+
+This package uses [debug](https://github.com/debug-js/debug#readme) to write verbose logs. To see them during runtime, run with the environment variable `DEBUG=cypress-magic-backend`
+
+```
+$ DEBUG=cypress-magic-backend npx cypress run
+```
 
 ## Copyright
 
