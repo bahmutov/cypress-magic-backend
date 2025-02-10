@@ -161,6 +161,23 @@ jobs:
           CYPRESS_magicBackendAdd: '{ "mode":"playback", "store":"remote" }'
           DEBUG: cypress-magic-backend
 
+  replay-remote:
+    # once we have recorded the remote API we can test the replay mode
+    needs: record-remote
+    runs-on: ubuntu-24.04
+    name: Inspecting remote API
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Inspect
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+        env:
+          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
+          CYPRESS_magicBackendAdd: '{ "mode":"replay", "store":"remote" }'
+          DEBUG: cypress-magic-backend
+
   inspect-remote:
     # once we have recorded the remote API we can test the inspect mode
     needs: record-remote
@@ -172,8 +189,6 @@ jobs:
       - name: Inspect
         uses: cypress-io/github-action@v6
         with:
-          # why do we need to start the server again here?
-          # shouldn't it be running from the previous step?
           start: npm start
         env:
           MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
@@ -191,6 +206,7 @@ jobs:
         array-playback-only,
         array-inspect-backend,
         record-remote,
+        replay-remote,
         inspect-remote,
       ]
     runs-on: ubuntu-24.04
