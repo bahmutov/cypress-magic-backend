@@ -137,6 +137,24 @@ jobs:
         env:
           CYPRESS_magic_backend_mode: inspect
 
+  record-remote:
+    runs-on: ubuntu-24.04
+    name: Record to Remote API
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write the cypress.env.json file 📝
+        run: |
+          echo '{ "magicBackend": { "mode":"recording", "store":"remote" } }' > cypress.env.json
+
+      - name: Record responses
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+        env:
+          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
+
   release:
     needs:
       [
@@ -147,6 +165,7 @@ jobs:
         array-magic-backend,
         array-playback-only,
         array-inspect-backend,
+        record-remote,
       ]
     runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'
