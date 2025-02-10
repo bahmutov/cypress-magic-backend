@@ -14,7 +14,6 @@ jobs:
         env:
           # record all API calls
           CYPRESS_magic_backend_mode: recording
-          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
 
       - name: Show changes JSON files
         run: git status
@@ -35,7 +34,6 @@ jobs:
           # and on CI the API backend should be in playback mode
           # and completely stubbed
           CYPRESS_magic_backend_mode: playback
-          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
 
   playback-only:
     runs-on: ubuntu-24.04
@@ -54,7 +52,6 @@ jobs:
           # and if a test has no recording, but tries to call API
           # the test should fail
           CYPRESS_magic_backend_mode: playback-only
-          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
 
   inspect-backend:
     runs-on: ubuntu-24.04
@@ -72,7 +69,6 @@ jobs:
           # but compares the request and response to the
           # recorded api calls from JSON files
           CYPRESS_magic_backend_mode: inspect
-          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
 
   # these jobs use a different Cypress config file
   # were API interception for magic-backend is defined
@@ -168,9 +164,10 @@ jobs:
       - name: Inspect
         uses: cypress-io/github-action@v6
         with:
-          # we have already installed everything
-          # and the web server should be running
           install: false
+          # why do we need to start the server again here?
+          # shouldn't it be running from the previous step?
+          start: npm start
         env:
           MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
           CYPRESS_magicBackendAdd: '{ "mode":"inspect", "store":"remote" }'
