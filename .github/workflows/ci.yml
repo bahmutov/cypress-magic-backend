@@ -139,7 +139,7 @@ jobs:
 
   record-remote:
     runs-on: ubuntu-24.04
-    name: Record to Remote API
+    name: Testing the remote API
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -151,6 +151,29 @@ jobs:
         env:
           MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
           CYPRESS_magicBackendAdd: '{ "mode":"recording", "store":"remote" }'
+          DEBUG: cypress-magic-backend
+
+      # once we recorded to the remote API we can test the replay
+      - name: Replay
+        uses: cypress-io/github-action@v6
+        with:
+          # we have already installed everything
+          # and the web server should be running
+          install: false
+        env:
+          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
+          CYPRESS_magicBackendAdd: '{ "mode":"playback", "store":"remote" }'
+          DEBUG: cypress-magic-backend
+
+      - name: Inspect
+        uses: cypress-io/github-action@v6
+        with:
+          # we have already installed everything
+          # and the web server should be running
+          install: false
+        env:
+          MAGIC_BACKEND_API_KEY: ${{ secrets.MAGIC_BACKEND_API_KEY }}
+          CYPRESS_magicBackendAdd: '{ "mode":"inspect", "store":"remote" }'
           DEBUG: cypress-magic-backend
 
   release:
