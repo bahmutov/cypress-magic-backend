@@ -554,6 +554,18 @@ beforeEach(() => {
                 req.continue((res) => {
                   const finished = +new Date()
                   const duration = finished - started // ms
+
+                  // save the API call data during inspect + remote mode
+                  if (storageMode === StorageModeNames.REMOTE) {
+                    apiCallsInThisTest.push({
+                      method: req.method,
+                      url: partialUrl,
+                      request: req.body,
+                      response: res.body,
+                      duration,
+                    })
+                  }
+
                   // console.log({
                   //   call: `${req.method} ${req.url}`,
                   //   recordedDuration: apiCall.duration,
