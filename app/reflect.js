@@ -15,5 +15,5 @@ module.exports = function jsonServerReflect(req, res, next) {
     return
   }
 
-  return next(req, res)
+  return next()
 }
