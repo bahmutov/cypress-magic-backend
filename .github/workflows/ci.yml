@@ -165,7 +165,7 @@ jobs:
     # once we have recorded the remote API we can test the replay mode
     needs: record-remote
     runs-on: ubuntu-24.04
-    name: Inspecting remote API
+    name: Replay using remote API
     steps:
       - name: Checkout
         uses: actions/checkout@v4
