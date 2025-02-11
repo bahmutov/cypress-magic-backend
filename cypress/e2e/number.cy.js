@@ -7,7 +7,7 @@ it('reflects the sent number', () => {
   cy.contains('button', 'Send number').click()
 
   const mode = Cypress.env('magic_backend_mode')
-  if (mode === 'playback') {
+  if (mode === 'playback' || mode === 'playback-only') {
     // the response is mocked and we cannot access it easily
     // but it won't be the random number we sent
     cy.contains('#answer', /server response: \d+/)
