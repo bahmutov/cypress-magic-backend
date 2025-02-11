@@ -28,6 +28,7 @@
 ## Assumptions
 
 1. All API calls in a particular test happen in the same order and can be stubbed in that order. In the future, I will provide a way to do flexible stubbing according to your own matching rules.
+2. We are using Chromium-based browser that works with [cypress-cdp](https://github.com/bahmutov/cypress-cdp) plugin.
 
 ## Installation
 
