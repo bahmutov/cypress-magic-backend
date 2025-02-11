@@ -1,0 +1,25 @@
+<body>
+  <h1>Number</h1>
+  <input type="number" id="num" value="0" />
+  <button id="send">Send number</button>
+  <p id="answer"></p>
+  <script>
+    document.getElementById('send').onclick = function () {
+      const num = document.getElementById('num').valueAsNumber
+      console.log({ num })
+      fetch('/reflect', {
+        method: 'POST',
+        body: JSON.stringify({ num }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then(({ num }) => {
+          document.getElementById('answer').innerText =
+            `server response: ${num}`
+        })
+        .catch(console.error)
+    }
+  </script>
+</body>
