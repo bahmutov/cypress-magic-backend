@@ -345,6 +345,13 @@ beforeEach(() => {
         cy.log(`**${label}** Playback mode from ${storageMode}`)
         loadRecord(Cypress.spec, Cypress.currentTest).then(
           (loaded) => {
+            if (Array.isArray(loaded)) {
+              // for now, take the last successful test recording
+              loaded = loaded.findLast(
+                (record) => record.testState === 'passed',
+              )
+            }
+
             if (!loaded) {
               cy.log(
                 `**${label}** No recorded API calls found for this test`,
@@ -355,6 +362,7 @@ beforeEach(() => {
               Cypress.env('magic_backend_mode', undefined)
               return
             }
+
             const apiCalls = loaded.apiCallsInThisTest
 
             let apiCallIndex = 0
@@ -503,6 +511,13 @@ beforeEach(() => {
               Cypress.env('magic_backend_mode', undefined)
               return
             }
+            if (Array.isArray(loaded)) {
+              // for now take the last passing test result
+              loaded = loaded.findLast(
+                (record) => record.testState === 'passed',
+              )
+            }
+
             const apiCalls = loaded.apiCallsInThisTest
 
             let apiCallIndex = 0

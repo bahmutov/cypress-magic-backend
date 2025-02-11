@@ -75,7 +75,7 @@ async function saveRemoteData(data) {
 /**
  * Finds recorded API calls for the current spec / test.
  * @param {MagicBackend.LoadRecordFindInfo} searchInfo
- * @returns {Promise<MagicBackend.TestApiRecordData|null>}
+ * @returns {Promise<MagicBackend.TestApiRecordData|MagicBackend.TestApiRecordData[]|null>}
  */
 async function loadRemoteData(searchInfo) {
   console.log(
@@ -86,7 +86,7 @@ async function loadRemoteData(searchInfo) {
   )
 
   const apiKey = getApiKey()
-  const url = `${magicBackendAtUrl}/records`
+  const url = `${magicBackendAtUrl}/records?all=true`
 
   const requestBody = {
     specName: searchInfo.specName,
@@ -106,15 +106,28 @@ async function loadRemoteData(searchInfo) {
     return null
   }
   // TODO: specify type for json object
-  const json = await body.json()
-  console.log('%s: %d API calls loaded', label, json.apiCalls.length)
-  return {
-    pluginName: json.meta.pluginName,
-    pluginVersion: json.meta.pluginVersion,
-    specName: json.specName,
-    testName: json.testTitle,
-    apiCallsInThisTest: json.apiCalls,
+  const recordings = await body.json()
+  if (!recordings.length) {
+    console.log(
+      '%s: could not find any previous API recordings',
+      label,
+    )
+    return null
   }
+
+  console.log('%s: %d API recordings found', label, recordings.length)
+  const results = recordings.map((json) => {
+    console.log(json)
+    return {
+      pluginName: json.meta.plugin,
+      pluginVersion: json.meta.version,
+      specName: searchInfo.specName,
+      testName: searchInfo.testName,
+      apiCallsInThisTest: json.apiCalls,
+      testState: json.testState,
+    }
+  })
+  return results
 }
 
 /**
