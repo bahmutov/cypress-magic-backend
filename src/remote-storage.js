@@ -16,13 +16,14 @@ checkPluginWasRegistered()
 /**
  * @type {MagicBackend.LoadRecord}
  */
-function loadRecord(currentSpec, currentTest) {
+function loadRecord(currentSpec, currentTest, allRecords) {
   checkPluginWasRegistered()
 
   /** @type {MagicBackend.LoadRecordFindInfo} */
   const findRecordData = {
     specName: currentSpec.relative,
     testName: currentTest.titlePath.join(' / '),
+    allRecords: Boolean(allRecords),
   }
   // @ts-ignore
   return cy.task('magic-backend:load', findRecordData, { log: false })

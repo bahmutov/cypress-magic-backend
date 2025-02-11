@@ -500,7 +500,7 @@ beforeEach(() => {
         const magicBackend = Cypress.env('magicBackend') || {}
         const apiCallDurationDifferenceThreshold =
           magicBackend.apiCallDurationDifferenceThreshold || 500 // ms
-        loadRecord(Cypress.spec, Cypress.currentTest).then(
+        loadRecord(Cypress.spec, Cypress.currentTest, true).then(
           (loaded) => {
             if (!loaded) {
               cy.log(

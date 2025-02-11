@@ -79,14 +79,18 @@ async function saveRemoteData(data) {
  */
 async function loadRemoteData(searchInfo) {
   console.log(
-    '%s: loading recorded data for spec "%s" test "%s"',
+    '%s: loading recorded data for spec "%s" test "%s" all records? %s',
     label,
     searchInfo.specName,
     searchInfo.testName,
+    searchInfo.allRecords,
   )
 
   const apiKey = getApiKey()
-  const url = `${magicBackendAtUrl}/records?all=true`
+  let url = `${magicBackendAtUrl}/records`
+  if (searchInfo.allRecords) {
+    url += '?all=true'
+  }
 
   const requestBody = {
     specName: searchInfo.specName,
@@ -105,29 +109,52 @@ async function loadRemoteData(searchInfo) {
     // no big deal, just return null
     return null
   }
-  // TODO: specify type for json object
-  const recordings = await body.json()
-  if (!recordings.length) {
-    console.log(
-      '%s: could not find any previous API recordings',
-      label,
-    )
-    return null
-  }
-
-  console.log('%s: %d API recordings found', label, recordings.length)
-  const results = recordings.map((json) => {
-    console.log(json)
-    return {
-      pluginName: json.meta.plugin,
-      pluginVersion: json.meta.version,
-      specName: searchInfo.specName,
-      testName: searchInfo.testName,
-      apiCallsInThisTest: json.apiCalls,
-      testState: json.testState,
+  if (searchInfo.allRecords) {
+    // TODO: specify type for json object
+    const recordings = await body.json()
+    if (!recordings.length) {
+      console.log(
+        '%s: could not find any previous API recordings',
+        label,
+      )
+      return null
     }
-  })
-  return results
+
+    console.log(
+      '%s: %d API recordings found',
+      label,
+      recordings.length,
+    )
+    const results = recordings.map((json) => {
+      // console.log(json)
+      return {
+        pluginName: json.meta.plugin,
+        pluginVersion: json.meta.version,
+        specName: searchInfo.specName,
+        testName: searchInfo.testName,
+        apiCallsInThisTest: json.apiCalls,
+        testState: json.testState,
+      }
+    })
+    return results
+  } else {
+    // a single test recording
+    // TODO: specify type for json object
+    const json = await body.json()
+    console.log(
+      '%s: %d API calls loaded',
+      label,
+      json.apiCalls.length,
+    )
+    const result = {
+      pluginName: json.meta.pluginName,
+      pluginVersion: json.meta.pluginVersion,
+      specName: json.specName,
+      testName: json.testTitle,
+      apiCallsInThisTest: json.apiCalls,
+    }
+    return result
+  }
 }
 
 /**
