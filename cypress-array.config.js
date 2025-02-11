@@ -9,6 +9,7 @@ module.exports = defineConfig({
           { method: 'GET', pathname: '/todos' },
           { method: 'POST', pathname: '/todos' },
           { method: 'DELETE', pathname: '/todos/*' },
+          { method: 'POST', pathname: '/reflect' },
         ],
       },
     },
