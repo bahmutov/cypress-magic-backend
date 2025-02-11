@@ -1,0 +1,19 @@
+{
+  "pluginName": "cypress-magic-backend",
+  "pluginVersion": "0.0.0-development",
+  "specName": "cypress/e2e/number.cy.js",
+  "testName": "reflects the sent number",
+  "apiCallsInThisTest": [
+    {
+      "method": "POST",
+      "url": "/reflect",
+      "request": {
+        "num": 25
+      },
+      "response": {
+        "num": 25
+      },
+      "duration": 5
+    }
+  ]
+}

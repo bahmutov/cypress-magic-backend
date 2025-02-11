@@ -16,7 +16,10 @@ module.exports = defineConfig({
         // to intercept all XHR calls
         // { method: '*', resourceType: 'xhr'}
         // a single object definition
-        apiCallsToIntercept: { method: '*', pathname: '/todos{/*,}' },
+        apiCallsToIntercept: [
+          { method: '*', pathname: '/todos{/*,}' },
+          { method: 'POST', pathname: '/reflect' },
+        ],
         // warn about API calls that change their duration
         apiCallDurationDifferenceThreshold: 500,
         // where to store recorded API calls?
