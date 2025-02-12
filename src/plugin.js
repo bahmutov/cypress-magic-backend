@@ -67,7 +67,11 @@ async function saveRemoteData(data) {
       `${label}: Could not save data, status code ${statusCode}`,
     )
   }
-  console.log('%s: API calls saved', label)
+  console.log(
+    '%s: %d API call(s) saved',
+    label,
+    data.apiCallsInThisTest?.length,
+  )
 
   return null
 }
@@ -182,6 +186,13 @@ function addAnyConfigs(config) {
   }
 }
 
+function printTextToTerminal(text) {
+  console.log(text)
+  // Cypress tasks must return some value (including null)
+  // to signal that there is no subject to yield
+  return null
+}
+
 function registerMagicBackend(on, config) {
   addAnyConfigs(config)
   const { magicBackend } = config.env
@@ -199,6 +210,7 @@ function registerMagicBackend(on, config) {
     on('task', {
       'magic-backend:store': saveRemoteData,
       'magic-backend:load': loadRemoteData,
+      'magic-backend:terminal': printTextToTerminal,
     })
     // IMPORTANT: the user should return the config object
     // from their setupNodeEvents function
