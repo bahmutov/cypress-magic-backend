@@ -7,6 +7,10 @@ import 'cypress-cdp'
 // const { loadRecord, saveRecord } = require('./file-save')
 const getSaveLoadFunctions = require('./init-storage')
 const { diff } = require('./diff')
+const {
+  inspectReportConsole,
+  inspectReportTerminal,
+} = require('./report')
 const { name, version } = require('../package.json')
 
 const label = 'cypress-magic-backend'
@@ -726,40 +730,14 @@ afterEach(function () {
           Array.isArray(recordsLoadedForThisTest) &&
           recordsLoadedForThisTest.length
         ) {
-          console.log('API call comparisons')
-          apiCallsInThisTest.forEach((apiCall, k) => {
-            console.group(
-              `API call ${k + 1} ${apiCall.method} ${apiCall.url}`,
-            )
-            console.log(
-              '🚨 \trequest\t%o\tresponse\t%o',
-              apiCall.request,
-              apiCall.response,
-            )
-            const previouslyRecorded = recordsLoadedForThisTest
-              .map((recorded) => {
-                return {
-                  testState: recorded.testState,
-                  call: recorded.apiCallsInThisTest[k],
-                }
-              })
-              // remove previously recorded tests that do not have this API call
-              .filter((r) => r.call)
-              // arrange so that the most recent calls are first
-              .reverse()
-            // should we grab the last N calls?
-
-            previouslyRecorded.forEach((r) => {
-              console.log(
-                `%s \trequest\t%o\tresponse\t%o`,
-                r.testState === 'passed' ? '✅' : '🚨',
-                r.call.request,
-                r.call.response,
-              )
-            })
-
-            console.groupEnd()
-          })
+          inspectReportConsole(
+            recordsLoadedForThisTest,
+            apiCallsInThisTest,
+          )
+          inspectReportTerminal(
+            recordsLoadedForThisTest,
+            apiCallsInThisTest,
+          )
         }
       }
       break
