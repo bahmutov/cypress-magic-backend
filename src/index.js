@@ -271,7 +271,11 @@ after(() => {
   backendModeInTheCurrentTest = null
 })
 
+let recordsLoadedForThisTest
+
 beforeEach(() => {
+  recordsLoadedForThisTest = null
+
   // which calls to intercept?
   const pluginConfig = Cypress.env('magicBackend')
   const apiCallsToIntercept = pluginConfig?.apiCallsToIntercept
@@ -512,6 +516,8 @@ beforeEach(() => {
               return
             }
             if (Array.isArray(loaded)) {
+              recordsLoadedForThisTest = loaded
+
               // for now take the last passing test result
               loaded = loaded.findLast(
                 (record) => record.testState === 'passed',
@@ -711,6 +717,49 @@ afterEach(function () {
               state,
             )
           }
+        }
+
+        // generate report comparing the current failed test run
+        // with all previously recorded API calls (both passed and failed)
+        if (
+          state === 'failed' &&
+          Array.isArray(recordsLoadedForThisTest) &&
+          recordsLoadedForThisTest.length
+        ) {
+          console.log('API call comparisons')
+          apiCallsInThisTest.forEach((apiCall, k) => {
+            console.group(
+              `API call ${k + 1} ${apiCall.method} ${apiCall.url}`,
+            )
+            console.log(
+              '🚨 \trequest\t%o\tresponse\t%o',
+              apiCall.request,
+              apiCall.response,
+            )
+            const previouslyRecorded = recordsLoadedForThisTest
+              .map((recorded) => {
+                return {
+                  testState: recorded.testState,
+                  call: recorded.apiCallsInThisTest[k],
+                }
+              })
+              // remove previously recorded tests that do not have this API call
+              .filter((r) => r.call)
+              // arrange so that the most recent calls are first
+              .reverse()
+            // should we grab the last N calls?
+
+            previouslyRecorded.forEach((r) => {
+              console.log(
+                `%s \trequest\t%o\tresponse\t%o`,
+                r.testState === 'passed' ? '✅' : '🚨',
+                r.call.request,
+                r.call.response,
+              )
+            })
+
+            console.groupEnd()
+          })
         }
       }
       break
