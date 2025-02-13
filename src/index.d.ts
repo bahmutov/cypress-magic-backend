@@ -89,6 +89,13 @@ declare namespace MagicBackend {
      *    apiCallsToIntercept: { method: 'GET',  pathname: '/api/users' }
      */
     apiCallsToIntercept: RouteMatcher | RouteMatcher[]
+
+    /**
+     * This plugin can collect all unique visited page into a Set object.
+     * Set the option to `true` and see the logged list after the test.
+     * @see https://glebbahmutov.com/blog/collect-tested-urls/
+     */
+    collectVisitedUrls: boolean
   }
 }
 

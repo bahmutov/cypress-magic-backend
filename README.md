@@ -149,6 +149,15 @@ module.exports = defineConfig({
 
 ![API call has changed its duration](./images/duration-change.png)
 
+### collectVisitedUrls
+
+Following the approach outlined in the blog post [Collect urls visited during each test](https://glebbahmutov.com/blog/collect-tested-urls/), you can grab all URLs each test visits. The list is shown in the Command Log after the test. The `baseUrl` is automatically removed.
+
+```js
+// the magicBackend property
+collectVisitedUrls: true
+```
+
 ### Types
 
 **Tip:** if you want code editor IntelliSense help you configure this plugin, specify the type for the `magicBackend` object using a JSDoc comment
