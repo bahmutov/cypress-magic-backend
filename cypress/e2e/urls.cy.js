@@ -1,5 +1,12 @@
 /// <reference types="cypress" />
 
+const mode = Cypress.env('magic_backend_mode')
+if (mode) {
+  // do not run this test when recording / replaying / etc
+  // since there are no API calls
+  return
+}
+
 it('collects urls visited during the test', () => {
   cy.visit('/')
   cy.get('.loaded')
