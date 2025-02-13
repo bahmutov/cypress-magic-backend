@@ -52,6 +52,14 @@ declare namespace MagicBackend {
     saveRecord: SaveRecord
   }
 
+  type SaveVisitedUrlsOptions = {
+    specName: string
+    testName: string
+    urls: string[]
+    pluginName: string
+    pluginVersion: string
+  }
+
   type StorageMode = 'local' | 'remote'
 
   interface UserConfig {

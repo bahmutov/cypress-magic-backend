@@ -270,6 +270,8 @@ To authenticate, you need to provide the API key via an environment variable
 $ MAGIC_BACKEND_API_KEY=mb.... npx cypress open
 ```
 
+If you are using `collectVisitedUrls: true`, all URLs visited for each passing test are sent to the cloud for saving.
+
 If you are interested in this service, please [provide your email](https://forms.gle/RZWQh5st8URrYowW6) to get notified when it becomes generally available or is beta preview.
 
 ## Debug
