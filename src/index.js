@@ -275,6 +275,36 @@ after(() => {
   backendModeInTheCurrentTest = null
 })
 
+function getCollectVisitedUrls() {
+  const pluginConfig = Cypress.env('magicBackend')
+  const collectUrls = pluginConfig?.collectVisitedUrls || false
+  return collectUrls
+}
+
+beforeEach(() => {
+  const collectUrls = getCollectVisitedUrls()
+  if (collectUrls) {
+    Cypress.env('visitedUrls', new Set())
+    Cypress.on('url:changed', (url) => {
+      // remove the base url
+      const baseUrl = Cypress.config('baseUrl') || ''
+      url = url.replace(baseUrl, '')
+      Cypress.env('visitedUrls').add(url)
+    })
+  }
+})
+
+afterEach(() => {
+  const collectUrls = getCollectVisitedUrls()
+  if (collectUrls) {
+    const set = Cypress.env('visitedUrls')
+    const urls = set.values().toArray()
+    cy.log(
+      `This test visited ${urls.length} URLs: ${urls.join(', ')}`,
+    )
+  }
+})
+
 let recordsLoadedForThisTest
 
 beforeEach(() => {

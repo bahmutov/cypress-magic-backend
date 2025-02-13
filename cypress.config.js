@@ -22,6 +22,9 @@ module.exports = defineConfig({
         ],
         // warn about API calls that change their duration
         apiCallDurationDifferenceThreshold: 500,
+        // collect each URL the test runner visits
+        // https://glebbahmutov.com/blog/collect-tested-urls/
+        collectVisitedUrls: true,
         // where to store recorded API calls?
         // local: store all API calls locally in JSON files
         // remote: send API calls to a remote server at cypress.tips
