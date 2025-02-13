@@ -193,6 +193,52 @@ function printTextToTerminal(text) {
   return null
 }
 
+/**
+ * Finds recorded API calls for the current spec / test.
+ * @param {MagicBackend.SaveVisitedUrlsOptions} saveUrlOptions
+ */
+async function saveVisitedUrls(saveUrlOptions) {
+  const { specName, testName, urls, pluginName, pluginVersion } =
+    saveUrlOptions
+
+  debug(
+    'magic backend, saving %d visited urls for %s %s',
+    urls.length,
+    specName,
+    testName,
+  )
+
+  const apiKey = getApiKey()
+  const url = `${magicBackendAtUrl}/visited-urls`
+
+  const body = {
+    specName,
+    testTitle: testName,
+    urls,
+    meta: {
+      plugin: pluginName,
+      version: pluginVersion,
+    },
+  }
+
+  const { statusCode } = await request(url, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-magic-backend-api-key': apiKey,
+    },
+    body: JSON.stringify(body),
+  })
+  if (statusCode !== 201) {
+    throw new Error(
+      `${label}: Could not save visited urls, status code ${statusCode}`,
+    )
+  }
+  console.log('%s: %d visited urls saved', label, urls.length)
+
+  return null
+}
+
 function registerMagicBackend(on, config) {
   addAnyConfigs(config)
   const { magicBackend } = config.env
@@ -203,6 +249,11 @@ function registerMagicBackend(on, config) {
 
   debug('final plugin options %o', magicBackend)
 
+  // common tasks
+  on('task', {
+    'magic-backend:terminal': printTextToTerminal,
+  })
+
   if (magicBackend.store === 'remote') {
     getApiKey()
 
@@ -210,7 +261,7 @@ function registerMagicBackend(on, config) {
     on('task', {
       'magic-backend:store': saveRemoteData,
       'magic-backend:load': loadRemoteData,
-      'magic-backend:terminal': printTextToTerminal,
+      'magic-backend:save-visited-urls': saveVisitedUrls,
     })
     // IMPORTANT: the user should return the config object
     // from their setupNodeEvents function

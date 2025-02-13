@@ -294,14 +294,38 @@ beforeEach(() => {
   }
 })
 
-afterEach(() => {
+afterEach(function saveVisitedUrls() {
+  const pluginConfig = Cypress.env('magicBackend')
+  const storageMode = pluginConfig?.store || StorageModeNames.LOCAL
+
   const collectUrls = getCollectVisitedUrls()
   if (collectUrls) {
     const set = Cypress.env('visitedUrls')
     const urls = set.values().toArray()
-    cy.log(
-      `This test visited ${urls.length} URLs: ${urls.join(', ')}`,
-    )
+    const text = `This test visited ${urls.length} URLs: ${urls.join(', ')}`
+    cy.log(text)
+
+    const state = this.currentTest?.state
+    if (state === 'passed') {
+      cy.task('magic-backend:terminal', text, { log: false })
+
+      if (storageMode === StorageModeNames.REMOTE) {
+        const specName = Cypress.spec.relative
+        const testName = Cypress.currentTest.titlePath.join('_')
+
+        const urlData = {
+          specName,
+          testName,
+          urls,
+          pluginName: name,
+          pluginVersion: version,
+        }
+
+        cy.task('magic-backend:save-visited-urls', urlData, {
+          log: false,
+        })
+      }
+    }
   }
 })
 
@@ -326,7 +350,7 @@ beforeEach(() => {
     return
   }
 
-  const storageMode = pluginConfig.store || StorageModeNames.LOCAL
+  const storageMode = pluginConfig?.store || StorageModeNames.LOCAL
   const { loadRecord } = getSaveLoadFunctions(storageMode)
 
   apiCallsInThisTest.length = 0
