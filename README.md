@@ -282,6 +282,10 @@ This package uses [debug](https://github.com/debug-js/debug#readme) to write ver
 $ DEBUG=cypress-magic-backend npx cypress run
 ```
 
+## See also
+
+- plugin [cypress-rest-easy](https://github.com/bahmutov/cypress-rest-easy)
+
 ## Copyright
 
 Copyright ©️ 2025 Gleb Bahmutov
