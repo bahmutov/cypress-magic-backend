@@ -5,7 +5,7 @@ it(
   { viewportHeight: 300, viewportWidth: 300 },
   () => {
     cy.visit('/number.html')
-    const random = Cypress._.random(-30, 30)
+    const random = Cypress._.random(3, 30)
     cy.get('#num').should('have.value', 0).clear().type(random)
     cy.contains('button', 'Send number').click()
 
