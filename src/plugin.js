@@ -3,6 +3,7 @@
 
 const { request } = require('undici')
 const debug = require('debug')('cypress-magic-backend')
+const clipboard = require('clipboardy').default
 
 const label = 'cypress-magic-backend'
 // local testing
@@ -193,6 +194,24 @@ function printTextToTerminal(text) {
   return null
 }
 
+function reportToTerminal({ failed, text }) {
+  console.log(text)
+
+  if (failed) {
+    const aiPrompt =
+      'explain why the test might fail given the following difference in API calls between passing ✅ and failing tests 🚨\n' +
+      '\`\`\`\n' +
+      text +
+      '\n\`\`\`'
+    clipboard.writeSync(aiPrompt)
+    console.log('✨ AI prompt copied to clipboard')
+  }
+
+  // Cypress tasks must return some value (including null)
+  // to signal that there is no subject to yield
+  return null
+}
+
 /**
  * Finds recorded API calls for the current spec / test.
  * @param {MagicBackend.SaveVisitedUrlsOptions} saveUrlOptions
@@ -252,6 +271,7 @@ function registerMagicBackend(on, config) {
   // common tasks
   on('task', {
     'magic-backend:terminal': printTextToTerminal,
+    'magic-backend:report': reportToTerminal,
   })
 
   if (magicBackend.store === 'remote') {
