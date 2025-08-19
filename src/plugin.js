@@ -3,7 +3,7 @@
 
 const { request } = require('undici')
 const debug = require('debug')('cypress-magic-backend')
-const clipboard = require('clipboardy').default
+const clipboard = require('clipboardy')
 
 const label = 'cypress-magic-backend'
 // local testing
