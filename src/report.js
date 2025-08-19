@@ -45,6 +45,8 @@ function inspectReportTerminal(
   apiCallsInThisTest,
 ) {
   let strings = ['API call comparisons']
+  let hasFailures = false
+
   apiCallsInThisTest.forEach((apiCall, k) => {
     strings.push(`API call ${k + 1} ${apiCall.method} ${apiCall.url}`)
     strings.push(
@@ -66,13 +68,21 @@ function inspectReportTerminal(
     previouslyRecorded.forEach((r) => {
       // TODO: report the diff of the API calls
       const emoji = r.testState === 'passed' ? '✅' : '🚨'
+      if (r.testState !== 'passed') {
+        hasFailures = true
+      }
+
       strings.push(
         `${emoji}\trequest\t${JSON.stringify(r.call.request)}\tresponse\t${JSON.stringify(r.call.response)}`,
       )
     })
   })
   const text = strings.join('\n')
-  cy.task('magic-backend:terminal', text, { log: false })
+  cy.task(
+    'magic-backend:report',
+    { failed: hasFailures, text },
+    { log: false },
+  )
 }
 
 module.exports = { inspectReportConsole, inspectReportTerminal }
