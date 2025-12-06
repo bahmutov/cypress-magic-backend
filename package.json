@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "cypress": "15.7.1",
-    "prettier": "3.7.3",
+    "prettier": "3.7.4",
     "semantic-release": "^24.2.1",
     "start-server-and-test": "2.0.9"
   },
