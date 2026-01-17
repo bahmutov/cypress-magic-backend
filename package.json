@@ -40,7 +40,7 @@
     "undici": "7.3.0"
   },
   "devDependencies": {
-    "cypress": "15.8.2",
+    "cypress": "15.9.0",
     "prettier": "3.7.4",
     "semantic-release": "^24.2.1",
     "start-server-and-test": "2.0.9"
